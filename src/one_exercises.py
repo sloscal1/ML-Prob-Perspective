@@ -115,17 +115,31 @@ def question_1():
         test_df = pd.read_csv("cached_data/mnist_test.csv", sep=",")
 
     kNN = LinearKNN(1)
-    kNN.fit(train_df.drop(["target"], axis="columns"), train_df.target)
-    preds = kNN.predict(test_df[:1000].drop(["target"], axis="columns"))
+    kNN.fit(train_df.drop(columns=["target"]), train_df.target)
+    preds = kNN.predict(test_df[:1000].drop(columns=["target"]))
     error_rate = [accuracy_score(preds, test_df[:1000].target)]
     print(f"Error rate of first 1000: {100-error_rate[-1]*100:0.2f}%")
     
     # Couldn't do all 10000 on my machine in one go.
     for end_val in range(2000, 10001, 1000):
-        preds = kNN.predict(test_df[end_val-1000:end_val].drop(["target"], axis="columns"))
+        preds = kNN.predict(test_df[end_val-1000:end_val].drop(columns=["target"]))
         error_rate.append(accuracy_score(preds, test_df[end_val-1000:end_val].target))
         print(f"Error rate of samples {end_val-1000} to {end_val}: {100-error_rate[-1]*100:0.2f}%")
-    print(f"Overall error rate: {100-np.mean(error_rate)*100:0.2f}")
+    print(f"Overall error rate: {100-np.mean(error_rate)*100:0.2f}%")
+
+    # Doing the shuffling part:
+    np.random.seed = 1337
+    idxs = list(range(train_df.shape[1]-1))
+    np.random.shuffle(idxs)
+    idxs.append(train_df.shape[1]-1) # Keep target at the end
+    shuff_train_df = train_df.copy()
+    shuff_train_df.columns = train_df.columns[idxs]
+    shuff_test_df = test_df.copy()
+    shuff_test_df.columns = test_df.columns[idxs]
+    kNN.fit(shuff_train_df.drop(columns=["target"]), shuff_train_df.target)
+    preds = kNN.predict(shuff_test_df[:1000].drop(columns=["target"]))
+    error_rate = [accuracy_score(preds, shuff_test_df[:1000].target)]
+    print(f"Error rate of first 1000 shuffled columns: {100-error_rate[-1]*100:0.2f}%")
 
 
 if __name__ == "__main__":
