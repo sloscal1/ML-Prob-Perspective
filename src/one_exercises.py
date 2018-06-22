@@ -119,7 +119,7 @@ def question_1():
     preds = kNN.predict(test_df[:1000].drop(["target"], axis="columns"))
     print(f"Error rate of first 1000: {100-accuracy_score(preds, test_df[:1000].target)*100:0.2f}%")
     
-    preds = kNN.predict(test_df.drop["target"], axis="columns")
+    preds = kNN.predict(test_df.drop(["target"], axis="columns"))
     print(f"Error rate of all data: {100-accuracy_score(preds, test_df.target)*100:0.2f}%")
 
 
