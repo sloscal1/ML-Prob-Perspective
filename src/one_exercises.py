@@ -117,11 +117,15 @@ def question_1():
     kNN = LinearKNN(1)
     kNN.fit(train_df.drop(["target"], axis="columns"), train_df.target)
     preds = kNN.predict(test_df[:1000].drop(["target"], axis="columns"))
-    print(f"Error rate of first 1000: {100-accuracy_score(preds, test_df[:1000].target)*100:0.2f}%")
+    error_rate = [accuracy_score(preds, test_df[:1000].target)]
+    print(f"Error rate of first 1000: {100-error_rate[-1]*100:0.2f}%")
     
-    preds = kNN.predict(test_df.drop(["target"], axis="columns"))
-    print(f"Error rate of all data: {100-accuracy_score(preds, test_df.target)*100:0.2f}%")
-
+    # Couldn't do all 10000 on my machine in one go.
+    for end_val in range(2000, 10001, 1000):
+        preds = kNN.predict(test_df[end_val-1000:end_val].drop(["target"], axis="columns"))
+        error_rate.append(accuracy_score(preds, test_df[end_val-1000:end_val].target))
+        print(f"Error rate of samples {end_val-1000} to {end_val}: {100-error_rate[-1]*100:0.2f}%")
+    print(f"Overall error rate: {100-np.mean(error_rate)*100:0.2f}")
 
 
 if __name__ == "__main__":
