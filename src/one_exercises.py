@@ -9,6 +9,8 @@ import numpy as np
 import pandas as pd
 from sklearn.metrics import accuracy_score
 
+from pyflann import *
+
 # This data comes from: http://yann.lecun.com/exdb/mnist/
 def download_if_needed(url, local):
     if not Path(local).exists():
@@ -111,8 +113,9 @@ def question_1():
         train_df.to_csv("cached_data/mnist_train.csv", sep=",", index=False)
         test_df.to_csv("cached_data/mnist_test.csv", sep=",", index=False)
     else:
-        train_df = pd.read_csv("cached_data/mnist_train.csv", sep=",")
-        test_df = pd.read_csv("cached_data/mnist_test.csv", sep=",")
+        dtypes = dict([(num, np.uint8) for num in range(28*28)])
+        train_df = pd.read_csv("cached_data/mnist_train.csv", sep=",", dtype=dtypes)
+        test_df = pd.read_csv("cached_data/mnist_test.csv", sep=",", dtype=dtypes)
 
     kNN = LinearKNN(1)
     kNN.fit(train_df.drop(columns=["target"]), train_df.target)
@@ -140,7 +143,39 @@ def question_1():
     preds = kNN.predict(shuff_test_df[:1000].drop(columns=["target"]))
     error_rate = [accuracy_score(preds, shuff_test_df[:1000].target)]
     print(f"Error rate of first 1000 shuffled columns: {100-error_rate[-1]*100:0.2f}%")
+    
+
+def question_2():
+    """
+    This code has some external dependencies. Namely, it uses FLANN and the
+    python bindings for it. Unfortunately, the maintainer of those bindings
+    hasn't fixed some compatibility issues so a pull request needs to be used
+    to allow it to work with python 3. Or, you can fix the few compatibillity
+    errors yourself_ .
+
+    ```
+    git clone https://github.com/primetang/pyflann.git
+    cd pyflann
+    git fetch origin pull/7/head:python36
+    git checkout python36
+    python setup.py install
+    ```
+
+    .. _yourself: https://github.com/primetang/pyflann/issues/1
+    """
+
+    dtypes = dict([(num, np.uint8) for num in range(28*28)])
+    train_df = pd.read_csv("cached_data/mnist_train.csv", sep=",", dtype=dtypes)
+    test_df = pd.read_csv("cached_data/mnist_test.csv", sep=",", dtype=dtypes)
+
+    flann = FLANN()
+    result, dists = flann.nn(
+            train_df.drop(columns=["target"]).values,
+            test_df.drop(columns=["target"]).values,
+            1
+    )
+    print(result)
 
 
 if __name__ == "__main__":
-    question_1()
+    question_2()
