@@ -46,3 +46,68 @@ def question_2():
 
     """
     return None
+
+def question_3():
+    """
+    Variance of a sum.
+
+    .. math::
+    \begin{align}
+    cov[X, Y] &= E[[X - E[X]][Y - E[Y]]]
+        &= E[XY - XE[Y] - YE[X] + E[X]E[Y]]
+        &= E[XY] - E[X]E[Y] - E[X]E[Y] + E[X]E[Y]
+        &= E[XY] - E[X]E[Y]
+    \end{align}
+    \begin{align}
+    var[X + Y] &= E[(X + Y - E[X+Y])^2]
+        &= E[X^2] + E[XY] - E[XE[X+Y]] + E[XY] + E[Y^2] - E[YE[X+Y]] - E[XE[X+Y]] - E[YE[X+Y]] + E[X+Y]^2
+        &= E[X^2] - E[X]^2 - E[X]E[Y] + E[Y^2] - E[Y]^2 - E[X]E[Y] +2E[XY] - E[X]^2 - 2E[X]E[Y] - E[Y]^2 + E[X+Y]^2
+        &= var(X) + var(Y) + 2E[XY] - 4E[X]E[Y] - E[X]^2 - E[Y]^2 + E[X+Y]^2
+        &= var(X) + var(Y) + 2cov(X, Y) - 2E[X]E[Y] - E[X]^2 - E[Y]^2 + E[X]^2 + 2E[X]E[Y] + E[Y]^2
+        &= var(X) + var(Y) + 2cov(x, Y)
+    \end{align}
+
+    Returns:
+        None.
+    """
+    return None
+
+def question_4():
+    """
+    Given
+    .. math::
+    \begin{align}
+    P(T=p|D=p) &= 0.99
+    P(T=n|D=n) &= 0.99
+    P(D=p) &= 1/10,000
+    \end{align}
+
+    This is an application of Bayes Theorem since we want to update the prior probability of having
+    the disease after knowing the test came back positive. So we have:
+
+    .. math::
+    \begin{align}
+    P(D=p|T=p) &= \frac{P(T=p|D=p) \cdot P(D=p)}{P(T=p)}, &Bayes Thm.\
+               &= \frac{P(T=p|D=p) \cdot P(D=p)}{\Sigma_d P(T=p|D=d)\cdot P(D=d)}, &Law of Total Prob.\
+               &= \frac{P(T=p|D=p) \cdot P(D=p)}{P(T=p|D=p) \cdot P(D=p) + P(T=p|D=n) \cdot P(D=n), &Notation\
+               &= \frac{0.99 \cdot 0.0001}{0.99 \cdot 0.0001 + 0.01 \cdot 0.9999}, &Law of Total Prob.\
+               &= 0.0098.
+    \end{align}
+
+    This means that the good news is the probability of having the disease is still a little less than 1/100. Also,
+    The second application of the Law of Total Probability is actually two applications:
+
+    .. math::
+    \begin{align}
+    1 &= P(D=p) + P(D=n)\
+    1 &= P(T=p|D=p) + P(T=p|D=n)
+    \end{align}
+
+    Returns:
+        None.
+    """
+    print(0.99*0.0001/(0.99*0.0001+0.01*0.9999))
+    return None
+
+if __name__ == "__main__":
+    question_4()
