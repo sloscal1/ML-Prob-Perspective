@@ -1,3 +1,5 @@
+import random
+
 def question_1():
     """
     p(gender=boy) = 0.5
@@ -15,6 +17,7 @@ def question_1():
     b) What is the probability that the other child is a girl if you see that one is a boy?
     Sample space: (b,g), (b,b). 1/2. The children are independent of each other, so it's the same as the probability
     of one child being a girl.
+
     Returns:
         None.
     """
@@ -42,30 +45,31 @@ def question_2():
     is relevant. The true culprit must have that blood type, and so it establishes that further evidence must be
     produced to establish the innocence or guilt of the defendant. This is far from the situation that we can ignore
     the blood type, the guilty part(ies) must have that match to be considered for the crime.
+
     Returns:
+        None.
 
     """
     return None
 
 def question_3():
-    """
+    r"""
     Variance of a sum.
 
     .. math::
-    \begin{align}
-    cov[X, Y] &= E[[X - E[X]][Y - E[Y]]]
-        &= E[XY - XE[Y] - YE[X] + E[X]E[Y]]
-        &= E[XY] - E[X]E[Y] - E[X]E[Y] + E[X]E[Y]
-        &= E[XY] - E[X]E[Y]
-    \end{align}
-    \begin{align}
-    var[X + Y] &= E[(X + Y - E[X+Y])^2]
-        &= E[X^2] + E[XY] - E[XE[X+Y]] + E[XY] + E[Y^2] - E[YE[X+Y]] - E[XE[X+Y]] - E[YE[X+Y]] + E[X+Y]^2
-        &= E[X^2] - E[X]^2 - E[X]E[Y] + E[Y^2] - E[Y]^2 - E[X]E[Y] +2E[XY] - E[X]^2 - 2E[X]E[Y] - E[Y]^2 + E[X+Y]^2
-        &= var(X) + var(Y) + 2E[XY] - 4E[X]E[Y] - E[X]^2 - E[Y]^2 + E[X+Y]^2
-        &= var(X) + var(Y) + 2cov(X, Y) - 2E[X]E[Y] - E[X]^2 - E[Y]^2 + E[X]^2 + 2E[X]E[Y] + E[Y]^2
-        &= var(X) + var(Y) + 2cov(x, Y)
-    \end{align}
+        cov[X, Y] &= \mathbb{E}[[X - \mathbb{E}[X]][Y - \mathbb{E}[Y]]]\\
+            &= \mathbb{E}[XY - X\mathbb{E}[Y] - Y\mathbb{E}[X] + \mathbb{E}[X]\mathbb{E}[Y]]\\
+            &= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y] - \mathbb{E}[X]\mathbb{E}[Y] + \mathbb{E}[X]\mathbb{E}[Y]\\
+            &= \mathbb{E}[XY] - \mathbb{E}[X]\mathbb{E}[Y]
+
+
+    .. math::
+        var[X + Y] &= \mathbb{E}[(X + Y - \mathbb{E}[X+Y])^2]\\
+            &= \mathbb{E}[X^2] + \mathbb{E}[XY] - \mathbb{E}[X\mathbb{E}[X+Y]] + \mathbb{E}[XY] + \mathbb{E}[Y^2] - \mathbb{E}[Y\mathbb{E}[X+Y]] - \mathbb{E}[X\mathbb{E}[X+Y]] - \mathbb{E}[Y\mathbb{E}[X+Y]] + \mathbb{E}[X+Y]^2\\
+            &= \mathbb{E}[X^2] - \mathbb{E}[X]^2 - \mathbb{E}[X]\mathbb{E}[Y] + \mathbb{E}[Y^2] - \mathbb{E}[Y]^2 - \mathbb{E}[X]\mathbb{E}[Y] +2\mathbb{E}[XY] - \mathbb{E}[X]^2 - 2\mathbb{E}[X]\mathbb{E}[Y] - \mathbb{E}[Y]^2 + \mathbb{E}[X+Y]^2\\
+            &= var(X) + var(Y) + 2\mathbb{E}[XY] - 4\mathbb{E}[X]\mathbb{E}[Y] - \mathbb{E}[X]^2 - \mathbb{E}[Y]^2 + \mathbb{E}[X+Y]^2\\
+            &= var(X) + var(Y) + 2cov(X, Y) - 2\mathbb{E}[X]\mathbb{E}[Y] - \mathbb{E}[X]^2 - \mathbb{E}[Y]^2 + \mathbb{E}[X]^2 + 2\mathbb{E}[X]\mathbb{E}[Y] + \mathbb{E}[Y]^2\\
+            &= var(X) + var(Y) + 2cov(X, Y)\\
 
     Returns:
         None.
@@ -73,35 +77,33 @@ def question_3():
     return None
 
 def question_4():
-    """
-    Given
+    r"""
+    Given:
+
     .. math::
-    \begin{align}
-    P(T=p|D=p) &= 0.99
-    P(T=n|D=n) &= 0.99
-    P(D=p) &= 1/10,000
-    \end{align}
+        P(T=p|D=p) &= 0.99\\
+        P(T=n|D=n) &= 0.99\\
+        P(D=p) &= 1/10,000
+
 
     This is an application of Bayes Theorem since we want to update the prior probability of having
     the disease after knowing the test came back positive. So we have:
 
     .. math::
-    \begin{align}
-    P(D=p|T=p) &= \frac{P(T=p|D=p) \cdot P(D=p)}{P(T=p)}, &Bayes Thm.\
-               &= \frac{P(T=p|D=p) \cdot P(D=p)}{\Sigma_d P(T=p|D=d)\cdot P(D=d)}, &Law of Total Prob.\
-               &= \frac{P(T=p|D=p) \cdot P(D=p)}{P(T=p|D=p) \cdot P(D=p) + P(T=p|D=n) \cdot P(D=n), &Notation\
-               &= \frac{0.99 \cdot 0.0001}{0.99 \cdot 0.0001 + 0.01 \cdot 0.9999}, &Law of Total Prob.\
-               &= 0.0098.
-    \end{align}
+        P(D=p|T=p) &= \frac{P(T=p|D=p) \cdot P(D=p)}{P(T=p)}, &~\textrm{Bayes Thm.}\\
+                   &= \frac{P(T=p|D=p) \cdot P(D=p)}{\Sigma_d P(T=p|D=d)\cdot P(D=d)}, &~\textrm{Law of Total Prob.}\\
+                   &= \frac{P(T=p|D=p) \cdot P(D=p)}{P(T=p|D=p) \cdot P(D=p) + P(T=p|D=n) \cdot P(D=n)}, &~\textrm{Notation}\\
+                   &= \frac{0.99 \cdot 0.0001}{0.99 \cdot 0.0001 + 0.01 \cdot 0.9999}, &~\textrm{Law of Total Prob.}\\
+                   &\approx 0.0098.
+
 
     This means that the good news is the probability of having the disease is still a little less than 1/100. Also,
     The second application of the Law of Total Probability is actually two applications:
 
     .. math::
-    \begin{align}
-    1 &= P(D=p) + P(D=n)\
-    1 &= P(T=p|D=p) + P(T=p|D=n)
-    \end{align}
+        1 &= P(D=p) + P(D=n)\\
+        1 &= P(T=p|D=p) + P(T=p|D=n)
+
 
     Returns:
         None.
@@ -109,5 +111,62 @@ def question_4():
     print(0.99*0.0001/(0.99*0.0001+0.01*0.9999))
     return None
 
+
+def question_5(num_samples=1000000, seed=1337):
+    r""" The Monty Hall Problem using Bayes theorem.
+
+    We're interested in determining whether switching doors is better than sticking with the original.
+
+    Let :math:`C \sim Unif(3)` be the random variable representing where the car (prize) is,
+    :math:`F \sim Unif(3)` be the random variable
+    representing the first selection made by the contestant, and :math:`O` be the random variable representing
+    which door is opened after the first selection is made. This variable is deterministic when the first guess does
+    not equal the prize value but has a choice otherwise.
+
+    .. math::
+        P(F=P|O, P) &= \frac{P(O|F=P) \cdot P(F=P)}{P(O|P=F)},~&\textrm{Bayes Theorem}\\
+                    &= \frac{1/2 \cdot 1/3}{1/2},~&\textrm{Counting}\\
+                    &= 1/3.\\
+        P(F\neq P|O, P) &= \frac{P(O|F\neq P) \cdot P(F\neq P)}{P(O|P\neq F)},~&\textrm{Bayes Theorem}\\
+                        &= \frac{1 \cdot 2/3}{1},~&\textrm{Counting}\\
+                        &= 2/3.
+
+    So from this we see that our first guess has a 2/3 chance of being wrong given the open door, so switching would
+    give us a 2/3 of being correct in that case. Additionally, by the Law of Total Probability, we could've computed
+    the chances of the first guess being correct (1/3) and taking the complement of that.
+
+    Side-effect:
+        This code runs a simulation of the Monty Hall Problem to compute the probabilities and prints the
+        probability of being right when staying with the original choice or switching to the remaining door.
+
+    Args:
+         num_samples (int): the number of times to sample the distribution, must be positive.
+         seed (int): the random seed to ensure repeatability.
+
+    Returns:
+        None.
+    """
+    random.seed = seed
+    stay = 0
+    switch = 0
+    for _ in range(num_samples):
+        prize = random.randint(0, 2)
+        first = random.randint(0, 2)
+        if prize != first:
+            # Trick: 3 - (0 + 1): 2; 3 - (0 + 2): 1; 3 - (1 + 2): 0.
+            open_door = 3 - (first + prize)
+        else:
+            # Trick: 1 + 0: 1, 2 + 0: 2; 1 + 1= 2, 1 + 2 = 0; 2 + 1 = 0, 2 + 2 = 1.
+            open_door = (random.randint(1, 2) + prize) % 3
+        if first == prize:
+            stay += 1
+        # Trick: 0 + 1 = 2, 0 + 2 = 1, 1 + 0 = 2, 1 + 2 = 0, 2 + 1 = 0 2 + 0 = 1
+        second = 3 - (open_door + first)
+        if prize == second:
+            switch += 1
+    print(f"Correct stay probability: {stay/num_samples*100:0.3f}%;"
+          f"\nCorrect switch probability: {switch/num_samples*100:0.3f}%")
+
+
 if __name__ == "__main__":
-    question_4()
+    question_5()
