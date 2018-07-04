@@ -216,7 +216,7 @@ The second application of the Law of Total Probability is actually two applicati
 
 <dl class="function">
 <dt id="chapter.two_exercises.question_5">
-<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_5</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_5" title="Permalink to this definition">¶</a></dt>
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_5</code><span class="sig-paren">(</span><em>num_samples=1000000</em>, <em>seed=1337</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_5" title="Permalink to this definition">¶</a></dt>
 <dd><p>The Monty Hall Problem using Bayes theorem.</p>
 <p>We’re interested in determining whether switching doors is better than sticking with the original.</p>
 <p>Let <span class="math notranslate nohighlight">\(C \sim Unif(3)\)</span> be the random variable representing where the car (prize) is,
@@ -244,6 +244,89 @@ seed (int): the random seed to ensure repeatability.</dd>
 <dt>Returns:</dt>
 <dd>None.</dd>
 </dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_6">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_6"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_6" title="Permalink to this definition">¶</a></dt>
+<dd><p>Want to know if you can compute <span class="math notranslate nohighlight">\(P(H|e_1,e_2)\)</span> with different givens.</p>
+<p>Let’s look at what this formula looks like after rearranging.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P(H|e_1,e_2) &amp;= \frac{P(e_1,e_2|H) \cdot P(H)}{P(e_1,e_2)},~&amp;\textrm{Bayes Thm.}\\
+             &amp;= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{P(e_1,e_2)},~&amp;\textrm{Def. of Cond. Ind.}\\
+             &amp;= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{\Sigma_h P(e_1,e_2|H) \cdot P(H)},~&amp;\textrm{Total Probability}\\
+             &amp;= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{\Sigma_h P(e_1|H)\cdot P(e_2|H) \cdot P(H)},~&amp;\textrm{Def. of Cond. Ind.}\end{split}\]</div>
+<ol class="lowerroman simple">
+<li><span class="math notranslate nohighlight">\(P(e_1,e_2), P(H), P(e_1|H), P(e_2|H)\)</span>. This is sufficient from the second line above if we assume
+independence between the <span class="math notranslate nohighlight">\(E\)</span> variables.</li>
+<li><span class="math notranslate nohighlight">\(P(e_1,e_2), P(H), P(e_1,e_2|H)\)</span>. This is sufficient from the first line above, a single
+applications of Bayes Theorem.</li>
+<li><span class="math notranslate nohighlight">\(P(e_1|H), P(e_2|H), P(H)\)</span>. This is sufficient from the last line, after applying the Law of total
+probability and Conditional Independence.</li>
+</ol>
+<p>So (ii) is the answer to part a), when we don’t know anything about the relationship between <span class="math notranslate nohighlight">\(E_1\)</span> and
+<span class="math notranslate nohighlight">\(E_2\)</span>. All sets of givens are sufficient if we know the two variables are conditionally independent.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>None.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_7">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_7</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_7"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pairwise independence does not imply mutual independence.</p>
+<p>Mutual independence means that <span class="math notranslate nohighlight">\(P(X_i|X_S) = P(X_i) \forall S \subseteq \{1,\ldots,n\}\setminus\{i\}\)</span>
+and so the joint distribution of <span class="math notranslate nohighlight">\(P(X_{1:n}) = \prod_{i=1}^n P(X_i)\)</span>.</p>
+<p>So it would be enough to show that for 3 variables that are all pairwise independent that they are
+not mutually independent.</p>
+<p>Consider a 5x5 grid where one variable <span class="math notranslate nohighlight">\((X_1)\)</span> is true only along the bottom 5 squares, another is true only
+along the right side <span class="math notranslate nohighlight">\((X_2)\)</span>, and a third is true only along the main diagonal <span class="math notranslate nohighlight">\((X_3)\)</span>. The only overlap
+any variable has with any other is in the lower right corner square.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}P(X_1=T) &amp;= 5/25\\
+P(X_1=F) &amp;= 20/25\\
+P(X_1=T,X_2=T) &amp;= 1/25 = 5/25*5/25 = P(X_1=T)P(X_2=T)\\
+P(X_1=T,X_2=F) &amp;= 4/25 = 5/25*20/25 = P(X_1=T)P(X_2=F)\\
+P(X_1=F,X_2=T) &amp;= 4/25 = 20/25*5/25 = P(X_1=F)P(X_2=T)\\
+P(X_1=F,X_2=F) &amp;= 16/25 = 20/25*20/25 = P(X_1=F)P(X_2=F)\\\end{split}\]</div>
+<p>In this way, we see that each pair of variable is conditionally independent. The question is if they are
+mutually independent. If they were, then <span class="math notranslate nohighlight">\(P(X_1,X_2,X_3) = P(X_1)P(X_2)P(X_3)\)</span>, but we see for
+<span class="math notranslate nohighlight">\(P(X_1=T,X_2=T,X_3=T) = 1/25\)</span> (the lower right corner), but <span class="math notranslate nohighlight">\(P(X_1=T)P(X_2=T)P(X_3=T) = 1/125\)</span> so
+we see that being pairwise conditionally independent does not imply mutual independence.</p>
+<dl class="docutils">
+<dt>Returns:</dt>
+<dd>None.</dd>
+</dl>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_8">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_8</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_8" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conditional independence iff joint factorizes.</p>
+<p>Prove that <span class="math notranslate nohighlight">\(p(x,y|z)=g(x,z)h(y,z)~\textrm{iff}~X \perp Y | Z.\)</span></p>
+<p>First, let <span class="math notranslate nohighlight">\(g(x,z) = p(x|z), h(y,z) = p(y|z)\)</span> since conditional probabilities
+are functions of random variables these are permissible definitions of <span class="math notranslate nohighlight">\(g, h\)</span>.</p>
+<p><span class="math notranslate nohighlight">\(\textrm{The forward direction:}~X \perp Y | Z \Rightarrow p(x,y|z)=g(x,z)h(y,z).\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(x,y|z) &amp;= p(x|z)p(y|z),~&amp;\textrm{Def. of Cond. Ind.}\\
+         &amp;= g(x,z)h(y,z),~&amp;\textrm{Defined above.}.\end{split}\]</div>
+<p>Lemma: <span class="math notranslate nohighlight">\(p(x|y,z) = p(x|z)~\textrm{if}~X \perp Y | Z.\)</span></p>
+<p>Proof:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(x|y,z) &amp;= \frac{p(x,y,z)}{p(y,z)},~&amp;\textrm{Def. of Cond. Prob.}\\
+         &amp;= \frac{p(x,y|z)p(z)}{p(y|z)p(z)}~&amp;\textrm{Def. of Cond. Prob.}\\
+         &amp;= \frac{p(x|z)p(y|z)p(z)}{p(y|z)p(z)}~&amp;\textrm{Def. of Cond. Ind.}\\
+         &amp;= p(x|z).\end{split}\]</div>
+<p><span class="math notranslate nohighlight">\(\textrm{The reverse direction:}~p(x,y|z)=g(x,z)h(y,z) \Rightarrow X \perp Y | Z.\)</span></p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(x,y|z) &amp;= \frac{p(x,y,z)}{p(z)},~&amp;\textrm{Def. of Cond. Prob.}\\
+         &amp;= \frac{p(z)p(y|z)p(x|y,z)}{p(z)},~&amp;\textrm{Chain rule of prob.}\\
+         &amp;= p(y|z)p(x|z),~&amp;\textrm{By the above lemma, Def. Cond. Ind.}\\
+         &amp;= g(x,z)h(y,z),~&amp;\textrm{Defined above.}\end{split}\]</div>
+<p>I don’t think I ever really proved that if you have two functions that you can combine
+them into the conditional probability statement desired.</p>
+<p>Returns:</p>
 </dd></dl>
 
 </div>

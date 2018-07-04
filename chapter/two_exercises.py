@@ -168,5 +168,116 @@ def question_5(num_samples=1000000, seed=1337):
           f"\nCorrect switch probability: {switch/num_samples*100:0.3f}%")
 
 
+def question_6():
+    r"""
+    Want to know if you can compute :math:`P(H|e_1,e_2)` with different givens.
+
+    Let's look at what this formula looks like after rearranging.
+
+    .. math::
+        P(H|e_1,e_2) &= \frac{P(e_1,e_2|H) \cdot P(H)}{P(e_1,e_2)},~&\textrm{Bayes Thm.}\\
+                     &= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{P(e_1,e_2)},~&\textrm{Def. of Cond. Ind.}\\
+                     &= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{\Sigma_h P(e_1,e_2|H) \cdot P(H)},~&\textrm{Total Probability}\\
+                     &= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{\Sigma_h P(e_1|H)\cdot P(e_2|H) \cdot P(H)},~&\textrm{Def. of Cond. Ind.}
+
+
+    i.      :math:`P(e_1,e_2), P(H), P(e_1|H), P(e_2|H)`. This is sufficient from the second line above if we assume
+            independence between the :math:`E` variables.
+    ii.     :math:`P(e_1,e_2), P(H), P(e_1,e_2|H)`. This is sufficient from the first line above, a single
+            applications of Bayes Theorem.
+    iii.    :math:`P(e_1|H), P(e_2|H), P(H)`. This is sufficient from the last line, after applying the Law of total
+            probability and Conditional Independence.
+
+
+    So (ii) is the answer to part a), when we don't know anything about the relationship between :math:`E_1` and
+    :math:`E_2`. All sets of givens are sufficient if we know the two variables are conditionally independent.
+
+    Returns:
+        None.
+
+    """
+    # What is an example of conditional independence:
+    # https://en.wikipedia.org/wiki/Conditional_independence
+    # P(R|Y) = 4/12, P(B|Y) = 6/12, P(R|Y)*P(B|Y) = 6/36 = 2/12 = P(R,B|Y)
+    # P(!R|Y) = 8/12, P(!B|Y) = 6/12, P(!R|Y)*P(!B|Y) = 8/24 = 4/12 = P(!R,!B|Y)
+    # P(!R|Y) = 8/12, P(B|Y) = 6/12, P(!R|Y)*P(B|Y) = 8/24 = 4/12 = P(!R,B|Y)
+    # P(R|Y) = 4/12, P(!B|Y) = 6/12 P(R|Y)*P(!B|Y) = 6/36 = 2/12 = P(R,!B|Y)
+    # So R \ind B | Y.
+    return None
+
+
+def question_7():
+    r""" Pairwise independence does not imply mutual independence.
+
+    Mutual independence means that :math:`P(X_i|X_S) = P(X_i) \forall S \subseteq \{1,\ldots,n\}\setminus\{i\}`
+    and so the joint distribution of :math:`P(X_{1:n}) = \prod_{i=1}^n P(X_i)`.
+
+    So it would be enough to show that for 3 variables that are all pairwise independent that they are
+    not mutually independent.
+
+    Consider a 5x5 grid where one variable :math:`(X_1)` is true only along the bottom 5 squares, another is true only
+    along the right side :math:`(X_2)`, and a third is true only along the main diagonal :math:`(X_3)`. The only overlap
+    any variable has with any other is in the lower right corner square.
+
+    .. math::
+        P(X_1=T) &= 5/25\\
+        P(X_1=F) &= 20/25\\
+        P(X_1=T,X_2=T) &= 1/25 = 5/25*5/25 = P(X_1=T)P(X_2=T)\\
+        P(X_1=T,X_2=F) &= 4/25 = 5/25*20/25 = P(X_1=T)P(X_2=F)\\
+        P(X_1=F,X_2=T) &= 4/25 = 20/25*5/25 = P(X_1=F)P(X_2=T)\\
+        P(X_1=F,X_2=F) &= 16/25 = 20/25*20/25 = P(X_1=F)P(X_2=F)\\
+
+    In this way, we see that each pair of variable is conditionally independent. The question is if they are
+    mutually independent. If they were, then :math:`P(X_1,X_2,X_3) = P(X_1)P(X_2)P(X_3)`, but we see for
+    :math:`P(X_1=T,X_2=T,X_3=T) = 1/25` (the lower right corner), but :math:`P(X_1=T)P(X_2=T)P(X_3=T) = 1/125` so
+    we see that being pairwise conditionally independent does not imply mutual independence.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_8():
+    r""" Conditional independence iff joint factorizes.
+
+    Prove that :math:`p(x,y|z)=g(x,z)h(y,z)~\textrm{iff}~X \perp Y | Z.`
+
+    First, let :math:`g(x,z) = p(x|z), h(y,z) = p(y|z)` since conditional probabilities
+    are functions of random variables these are permissible definitions of :math:`g, h`.
+
+    :math:`\textrm{The forward direction:}~X \perp Y | Z \Rightarrow p(x,y|z)=g(x,z)h(y,z).`
+
+    .. math::
+       p(x,y|z) &= p(x|z)p(y|z),~&\textrm{Def. of Cond. Ind.}\\
+                &= g(x,z)h(y,z),~&\textrm{Defined above.}.
+
+    Lemma: :math:`p(x|y,z) = p(x|z)~\textrm{if}~X \perp Y | Z.`
+
+    Proof:
+
+    .. math::
+        p(x|y,z) &= \frac{p(x,y,z)}{p(y,z)},~&\textrm{Def. of Cond. Prob.}\\
+                 &= \frac{p(x,y|z)p(z)}{p(y|z)p(z)}~&\textrm{Def. of Cond. Prob.}\\
+                 &= \frac{p(x|z)p(y|z)p(z)}{p(y|z)p(z)}~&\textrm{Def. of Cond. Ind.}\\
+                 &= p(x|z).
+
+    :math:`\textrm{The reverse direction:}~p(x,y|z)=g(x,z)h(y,z) \Rightarrow X \perp Y | Z.`
+
+    .. math::
+        p(x,y|z) &= \frac{p(x,y,z)}{p(z)},~&\textrm{Def. of Cond. Prob.}\\
+                 &= \frac{p(z)p(y|z)p(x|y,z)}{p(z)},~&\textrm{Chain rule of prob.}\\
+                 &= p(y|z)p(x|z),~&\textrm{By the above lemma, Def. Cond. Ind.}\\
+                 &= g(x,z)h(y,z),~&\textrm{Defined above.}
+
+    I don't think I ever really proved that if you have two functions that you can combine
+    them into the conditional probability statement desired.
+
+
+
+    Returns:
+
+    """
+
 if __name__ == "__main__":
     question_5()

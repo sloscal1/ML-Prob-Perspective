@@ -147,7 +147,7 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
-<div class="viewcode-block" id="question_5"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_5">[docs]</a><span class="k">def</span> <span class="nf">question_5</span><span class="p">():</span>
+<div class="viewcode-block" id="question_5"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_5">[docs]</a><span class="k">def</span> <span class="nf">question_5</span><span class="p">(</span><span class="n">num_samples</span><span class="o">=</span><span class="mi">1000000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1337</span><span class="p">):</span>
     <span class="sa">r</span><span class="sd">&quot;&quot;&quot; The Monty Hall Problem using Bayes theorem.</span>
 
 <span class="sd">    We&#39;re interested in determining whether switching doors is better than sticking with the original.</span>
@@ -181,8 +181,7 @@
 <span class="sd">    Returns:</span>
 <span class="sd">        None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">num_samples</span> <span class="o">=</span> <span class="mi">1000000</span>
-    <span class="n">random</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="mi">1337</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
     <span class="n">stay</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">switch</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_samples</span><span class="p">):</span>
@@ -203,6 +202,117 @@
     <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Correct stay probability: {stay/num_samples*100:0.3f}%;&quot;</span>
           <span class="n">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Correct switch probability: {switch/num_samples*100:0.3f}%&quot;</span><span class="p">)</span></div>
 
+
+<div class="viewcode-block" id="question_6"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_6">[docs]</a><span class="k">def</span> <span class="nf">question_6</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Want to know if you can compute :math:`P(H|e_1,e_2)` with different givens.</span>
+
+<span class="sd">    Let&#39;s look at what this formula looks like after rearranging.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        P(H|e_1,e_2) &amp;= \frac{P(e_1,e_2|H) \cdot P(H)}{P(e_1,e_2)},~&amp;\textrm{Bayes Thm.}\\</span>
+<span class="sd">                     &amp;= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{P(e_1,e_2)},~&amp;\textrm{Def. of Cond. Ind.}\\</span>
+<span class="sd">                     &amp;= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{\Sigma_h P(e_1,e_2|H) \cdot P(H)},~&amp;\textrm{Total Probability}\\</span>
+<span class="sd">                     &amp;= \frac{P(e_1|H) \cdot P(e_2|H) \cdot P(H)}{\Sigma_h P(e_1|H)\cdot P(e_2|H) \cdot P(H)},~&amp;\textrm{Def. of Cond. Ind.}</span>
+
+
+<span class="sd">    i.      :math:`P(e_1,e_2), P(H), P(e_1|H), P(e_2|H)`. This is sufficient from the second line above if we assume</span>
+<span class="sd">            independence between the :math:`E` variables.</span>
+<span class="sd">    ii.     :math:`P(e_1,e_2), P(H), P(e_1,e_2|H)`. This is sufficient from the first line above, a single</span>
+<span class="sd">            applications of Bayes Theorem.</span>
+<span class="sd">    iii.    :math:`P(e_1|H), P(e_2|H), P(H)`. This is sufficient from the last line, after applying the Law of total</span>
+<span class="sd">            probability and Conditional Independence.</span>
+
+
+<span class="sd">    So (ii) is the answer to part a), when we don&#39;t know anything about the relationship between :math:`E_1` and</span>
+<span class="sd">    :math:`E_2`. All sets of givens are sufficient if we know the two variables are conditionally independent.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="c1"># What is an example of conditional independence:</span>
+    <span class="c1"># https://en.wikipedia.org/wiki/Conditional_independence</span>
+    <span class="c1"># P(R|Y) = 4/12, P(B|Y) = 6/12, P(R|Y)*P(B|Y) = 6/36 = 2/12 = P(R,B|Y)</span>
+    <span class="c1"># P(!R|Y) = 8/12, P(!B|Y) = 6/12, P(!R|Y)*P(!B|Y) = 8/24 = 4/12 = P(!R,!B|Y)</span>
+    <span class="c1"># P(!R|Y) = 8/12, P(B|Y) = 6/12, P(!R|Y)*P(B|Y) = 8/24 = 4/12 = P(!R,B|Y)</span>
+    <span class="c1"># P(R|Y) = 4/12, P(!B|Y) = 6/12 P(R|Y)*P(!B|Y) = 6/36 = 2/12 = P(R,!B|Y)</span>
+    <span class="c1"># So R \ind B | Y.</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_7"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_7">[docs]</a><span class="k">def</span> <span class="nf">question_7</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Pairwise independence does not imply mutual independence.</span>
+
+<span class="sd">    Mutual independence means that :math:`P(X_i|X_S) = P(X_i) \forall S \subseteq \{1,\ldots,n\}\setminus\{i\}`</span>
+<span class="sd">    and so the joint distribution of :math:`P(X_{1:n}) = \prod_{i=1}^n P(X_i)`.</span>
+
+<span class="sd">    So it would be enough to show that for 3 variables that are all pairwise independent that they are</span>
+<span class="sd">    not mutually independent.</span>
+
+<span class="sd">    Consider a 5x5 grid where one variable :math:`(X_1)` is true only along the bottom 5 squares, another is true only</span>
+<span class="sd">    along the right side :math:`(X_2)`, and a third is true only along the main diagonal :math:`(X_3)`. The only overlap</span>
+<span class="sd">    any variable has with any other is in the lower right corner square.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        P(X_1=T) &amp;= 5/25\\</span>
+<span class="sd">        P(X_1=F) &amp;= 20/25\\</span>
+<span class="sd">        P(X_1=T,X_2=T) &amp;= 1/25 = 5/25*5/25 = P(X_1=T)P(X_2=T)\\</span>
+<span class="sd">        P(X_1=T,X_2=F) &amp;= 4/25 = 5/25*20/25 = P(X_1=T)P(X_2=F)\\</span>
+<span class="sd">        P(X_1=F,X_2=T) &amp;= 4/25 = 20/25*5/25 = P(X_1=F)P(X_2=T)\\</span>
+<span class="sd">        P(X_1=F,X_2=F) &amp;= 16/25 = 20/25*20/25 = P(X_1=F)P(X_2=F)\\</span>
+
+<span class="sd">    In this way, we see that each pair of variable is conditionally independent. The question is if they are</span>
+<span class="sd">    mutually independent. If they were, then :math:`P(X_1,X_2,X_3) = P(X_1)P(X_2)P(X_3)`, but we see for</span>
+<span class="sd">    :math:`P(X_1=T,X_2=T,X_3=T) = 1/25` (the lower right corner), but :math:`P(X_1=T)P(X_2=T)P(X_3=T) = 1/125` so</span>
+<span class="sd">    we see that being pairwise conditionally independent does not imply mutual independence.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_8"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_8">[docs]</a><span class="k">def</span> <span class="nf">question_8</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Conditional independence iff joint factorizes.</span>
+
+<span class="sd">    Prove that :math:`p(x,y|z)=g(x,z)h(y,z)~\textrm{iff}~X \perp Y | Z.`</span>
+
+<span class="sd">    First, let :math:`g(x,z) = p(x|z), h(y,z) = p(y|z)` since conditional probabilities</span>
+<span class="sd">    are functions of random variables these are permissible definitions of :math:`g, h`.</span>
+
+<span class="sd">    :math:`\textrm{The forward direction:}~X \perp Y | Z \Rightarrow p(x,y|z)=g(x,z)h(y,z).`</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">       p(x,y|z) &amp;= p(x|z)p(y|z),~&amp;\textrm{Def. of Cond. Ind.}\\</span>
+<span class="sd">                &amp;= g(x,z)h(y,z),~&amp;\textrm{Defined above.}.</span>
+
+<span class="sd">    Lemma: :math:`p(x|y,z) = p(x|z)~\textrm{if}~X \perp Y | Z.`</span>
+
+<span class="sd">    Proof:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(x|y,z) &amp;= \frac{p(x,y,z)}{p(y,z)},~&amp;\textrm{Def. of Cond. Prob.}\\</span>
+<span class="sd">                 &amp;= \frac{p(x,y|z)p(z)}{p(y|z)p(z)}~&amp;\textrm{Def. of Cond. Prob.}\\</span>
+<span class="sd">                 &amp;= \frac{p(x|z)p(y|z)p(z)}{p(y|z)p(z)}~&amp;\textrm{Def. of Cond. Ind.}\\</span>
+<span class="sd">                 &amp;= p(x|z).</span>
+
+<span class="sd">    :math:`\textrm{The reverse direction:}~p(x,y|z)=g(x,z)h(y,z) \Rightarrow X \perp Y | Z.`</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(x,y|z) &amp;= \frac{p(x,y,z)}{p(z)},~&amp;\textrm{Def. of Cond. Prob.}\\</span>
+<span class="sd">                 &amp;= \frac{p(z)p(y|z)p(x|y,z)}{p(z)},~&amp;\textrm{Chain rule of prob.}\\</span>
+<span class="sd">                 &amp;= p(y|z)p(x|z),~&amp;\textrm{By the above lemma, Def. Cond. Ind.}\\</span>
+<span class="sd">                 &amp;= g(x,z)h(y,z),~&amp;\textrm{Defined above.}</span>
+
+<span class="sd">    I don&#39;t think I ever really proved that if you have two functions that you can combine</span>
+<span class="sd">    them into the conditional probability statement desired.</span>
+
+
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span></div>
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">question_5</span><span class="p">()</span>
