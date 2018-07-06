@@ -150,6 +150,46 @@ class NumberGame(object):
             posteriors.append(num)
         return np.divide(posteriors, denominator)
 
+    def post_predictive_distribution(self, samples):
+        """
+
+        What is the probability that any point belongs to the
+        target concept given the data we've seen so far?
+        .. math::
+            p(\tilde{x} \in C|\mathcal{D}) = \Sum_h p(y=1|\tilde{x},h)p(h|\mathcal{D}).
+
+        Where :math:`\tilde{x}` is a future observation and :math:`y=1` states that the
+        observation is consistent with the given concept.
+
+        Args:
+            samples (list int): the samples from the target concept we've observed so far.
+        Returns:
+            list float: the posterior predictive distribution at this time.
+        """
+        post_pred_dist = []
+        posteriors = self.posterior(samples)
+        for point in range(1, self.max_val+1):
+            post_pred = 0
+            for concept, posterior in list(zip(self.concepts, posteriors)):
+                if point in concept.extension:
+                    post_pred += posterior
+            post_pred_dist.append(post_pred)
+        return post_pred_dist
+
+    def plugin_distribution(self, samples):
+        """
+
+        What is the probability that any point belongs to the target concept
+        given that we "plug in" the most likely concept a posteriori?
+        Args:
+            samples:
+
+        Returns:
+
+        """
+        plugin = self.concepts[np.argmax(self.posterior(samples))]
+        return [1.0 if x in plugin.extension else 0.0 for x in range(1, self.max_val+1)]
+
 
 def likelihood_ratio(posteriors):
     temps = sorted(posteriors)
@@ -159,7 +199,6 @@ def likelihood_ratio(posteriors):
 
 def main():
     game = NumberGame()
-    game.select_concept()
     samples = []
     while (
             not samples
@@ -168,6 +207,8 @@ def main():
         samples.append(game.sample_from_concept())
         print(f"Samples: {samples}")
         print(f"Posteriors: {game.posterior(samples)}")
+        print(f"Plug-in Distribution: {game.plugin_distribution(samples)}")
+        print(f"Posterior Predictive Distribution: {game.post_predictive_distribution(samples)}")
     print(f"MAP: {game.concepts[np.argmax(game.posterior(samples))].name}")
     print(f"True concept: {game.active_concept}")
 
