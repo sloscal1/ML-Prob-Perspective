@@ -1,10 +1,64 @@
+""" Worked examples and exercises from Chapter 3.
+
+"""
 import math
 import random
 
 import numpy as np
 
 
+class Concept:
+    """ This is a concept or hypothesis from the Numbers Game.
+
+    Attributes:
+        name (str): The common name of the concept.
+        extension (list: int): The values in the event space this concept describes.
+        prior (float): The prior probability of this concept being selected.
+    """
+    def __init__(self, name, extension=[], prior=-1):
+        self.name = name
+        self.extension = extension
+        self.prior = prior
+
+    def likelihood(self, n_samples):
+        """
+        Compute the :math:`p(D|h) = \frac{p(D,h)}/{p(h)}`.
+
+        Args:
+            n_samples (int): the number of samples collected from the target concept.
+
+        Returns:
+            list float: the likelihood of the data given the hypothesis. This comes
+                from the strong sampling assumption
+        """
+        return 1.0/(len(self.extension)**n_samples)
+
+    def __repr__(self):
+        return f"Concept(name={self.name},extension={self.extension},prior={self.prior})"
+
+    def __eq__(self, other):
+        return self.name == other.name
+
+
 class NumberGame(object):
+    """ The game as described in Chapter 3 but used by Joshua Tenenbaum in his PhD Thesis.
+
+    The game demonstrates that it is possible to select a correct hypothesis using only
+    positive examples from the target.
+
+    Note: It is critical that all the candidate concepts are distinct. This might seem obvious,
+    but there are often many ways to describe the same concept in language. For example, consider
+    ``multiples of 10`` and ``ends in 0`` for the space :math:`[1, 100]`. These are clearly different
+    ideas, but they have the same extension in the space. This means that if one is the target, the
+    other is equally likely. This causes the optimization to converge to 0.5 instead of 1.0, playing
+    havoc with the program.
+
+    Attributes:
+        concepts (list: Concept): The possible concepts in the game.
+        active_concept: (Concept): The current target of the game, selected at random from ``concepts``.
+
+
+    """
     def __init__(self, *, seed=None):
         if seed:
             np.random.seed = seed
@@ -14,80 +68,84 @@ class NumberGame(object):
         for num in range(3, self.max_val+1, 2):
             if all([num % prime for prime in primes]):
                 primes.append(num)
-        self.concepts = {
-            "odd": [num for num in range(1, self.max_val+1, 2)],
-            "squares": [num*num for num in range(1, 11)],
-            "primes": primes,
-            "all": list(range(1, self.max_val+1)),
-        }
+        self.concepts = []
+        self.concepts.extend(
+            [
+                Concept("odd", [num for num in range(1, self.max_val+1, 2)], 0.15),
+                Concept("squares", [num*num for num in range(1, 11)]),
+                Concept("primes", primes, 0.05),
+                Concept("all", list(range(1, self.max_val+1))),
+            ]
+        )
         for val in range(2, 11):
-            self.concepts[f"mult of {val}"] = [num for num in range(val, self.max_val+1, val)]
-            self.concepts[f"ends in {val}"] = [num for num in range(val, self.max_val+1, 10)]
-            self.concepts[f"power of {val}"] = [val**num for num in range(0, int(math.ceil(math.log(self.max_val, val))))]
-        self.concepts["evens"] = self.concepts["mult of 2"]
-        self.concepts.pop("mult of 2")
-        self.concepts["power of 2 + (37)"] = [val for val in np.add(self.concepts["power of 2"], 37) if val <= 100]
-        self.concepts["power of 2 - (37)"] = [val for val in np.add(self.concepts["power of 2"], -37) if val > 0]+[128-37]
+            self.concepts.append(Concept(f"mult of {val}", [num for num in range(val, self.max_val+1, val)]))
+            self.concepts.append(Concept(f"ends in {val}", [num for num in range(val, self.max_val+1, 10)]))
+            self.concepts.append(Concept(f"power of {val}", [val**num for num in range(1, int(math.floor(math.log(self.max_val, val)))+1)]))
+        # Find the concept mult of 2 and replace it with even
+        pos = self.concepts.index(Concept("mult of 2"))
+        self.concepts[pos].name = "even"
+        self.concepts[pos].prior = 0.15
+        self.concepts.append(
+            Concept(
+                "power of 2 + (37)",
+                [
+                    val for val in np.add(
+                        self.concepts[self.concepts.index(Concept("power of 2"))].extension,
+                        37)
+                    if val <= 100
+                ],
+                0.0005
+            )
+        )
+        self.concepts.append(
+            Concept(
+                "power of 2 - (37)",
+                [
+                    val for val in np.add(
+                        self.concepts[self.concepts.index(Concept("power of 2"))].extension,
+                        -37)
+                    if val > 0
+                ],
+                0.0005
+            )
+        )
+        self.concepts.remove(Concept("ends in 10"))
         self.active_concept = None
-        self.priors = dict()
-        print(self.concepts)
-        for key in self.concepts:
-            print(f"{key}: {len(self.concepts[key])}")
-
-    def select_concept(self):
-        self.active_concept = random.choice(list(self.concepts.keys()))
-        print(self.active_concept)
-        return None
+        other_priors = 1.0/(len(self.concepts) - len([concept for concept in self.concepts if concept.prior != -1]))
+        for concept in self.concepts:
+            if concept.prior == -1:
+                concept.prior = other_priors
+        self.active_concept = random.choice(list(self.concepts))
 
     def sample_from_concept(self):
-        return self.concepts[self.active_concept][random.randint(0, len(self.concepts[self.active_concept]))-1]
-
-    def likelihood(self, samples):
-        """
-        Compute the :math:`p(D|h) = \frac{p(D,h)}/{p(h)}`.
-        Args:
-            samples (list int): a list of samples from the target concept.
+        """ Generate a single sample from the ``active_concept``.
 
         Returns:
-            list float: the likelihood of the data given the hypothesis. This comes
-                from the strong sampling assumption
+            int: a number from the active concept.
+
         """
-        n = len(samples)
-        # I think this likelihood should include the probability of NOT seeing certain numbers.
-        return [1.0/(len(h)**n) for h in self.concepts.values()]
-
-    def better_likelihood(self, samples):
-        # what is the probabililty of seeing a subset of the numbers from this concept?
-        # If this was the true concept, we would expect to see a uniform distribution across
-        # these values.
-        # 4, 16, 64
-        # 2, 4, 8, 16, ,32, 64
-        # p(X=2) = 1/6
-        # 5/6**N
-        return None
-
-    def set_priors(self):
-        self.priors.clear()
-        self.priors["even"] = 0.15
-        self.priors["odd"] = 0.15
-        self.priors["power of 2 + (37)"] = 0.0005
-        self.priors["power of 2 - (37)"] = 0.0005
-        self.priors["primes"] = 0.05
-        others = (1.0 - sum(self.priors.values()))/(len(self.concepts) - len(self.priors))
-        for concept in self.concepts.keys():
-            if concept not in self.priors:
-                self.priors[concept] = others
-        return self.priors
+        return random.choice(self.active_concept.extension)
 
     def posterior(self, samples):
+        """ Generate the full posterior probability of all ``concepts``.
+
+        Computes the posterior :math:`p(C|\mathcal{D}) = \frac{p(\mathcal{D}|h)p(h)}{p(\mathcal{D})}`,
+        substituting all possible concepts for :math:`h`.
+
+        Args:
+            samples (list: int): All samples generated by the target concept so far.
+
+        Returns:
+            list float: the posterior probability of all ``concepts``.
+        """
         unique_samps = set(samples)
         denominator = 0
         posteriors = []
-        likelihoods = self.likelihood(samples)
-        for pos, (name, hyp) in enumerate(self.concepts.items()):
+        n_samps = len(samples)
+        for concept in self.concepts:
             num = 0
-            if unique_samps.issubset(set(hyp)):
-                num = self.priors[name]/likelihoods[pos]
+            if unique_samps.issubset(set(concept.extension)):
+                num = concept.prior*concept.likelihood(n_samps)
             denominator += num
             posteriors.append(num)
         return np.divide(posteriors, denominator)
@@ -98,18 +156,20 @@ def likelihood_ratio(posteriors):
     lr = temps[-1]/temps[-2]
     return lr
 
+
 def main():
-    game = NumberGame(seed=1337)
+    game = NumberGame()
     game.select_concept()
-    game.set_priors()
     samples = []
     while (
             not samples
-            or (likelihood_ratio(game.posterior(samples)) < 1000
-            and max(game.posterior(samples)) < 0.99)):
+            or max(game.posterior(samples)) < 0.99
+    ):
         samples.append(game.sample_from_concept())
         print(f"Samples: {samples}")
         print(f"Posteriors: {game.posterior(samples)}")
+    print(f"MAP: {game.concepts[np.argmax(game.posterior(samples))].name}")
+    print(f"True concept: {game.active_concept}")
 
 
 if __name__ == "__main__":
