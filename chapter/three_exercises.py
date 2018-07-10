@@ -197,6 +197,53 @@ def likelihood_ratio(posteriors):
     return lr
 
 
+def question_1():
+    """
+    Optimize the log likelihood of :math:`p(\mathcal{D}|\theta) = \theta^{N_1}(1-\theta)^{N_0}`
+    to prove :math:`\frac{N_1}{N}`, the MLE of the Bernoulli/binomial model.
+
+    .. math::
+        log(p(\mathcal{D}|\theta) &= log(\theta^{N_1}(1-\theta)^{N_0})\\
+                                  &= N_1 log(\theta)+ N_0 log(1-\theta)\\
+                                  &= N_1 log(\theta)+ (N-N_1)log(1-\theta).
+
+    Now, optimizing for :math:`\theta` by taking the derivative of the above:
+
+    .. math::
+        & \frac{d}{d\theta} [N_1 log(\theta)+ (N-N_1)log(1-\theta)]\\
+        0 &= \frac{N_1}{\theta} - \frac{N-N_1}{1-\theta}\\
+        N_1(1-\theta) &= (N-N_1)\theta\\
+        N_1 - N_1\theta &= N\theta - N_1\theta\\
+        N_1 &= N\theta\\
+        \frac{N_1}{N} &= \theta\\
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_2():
+    """
+    Show that:
+
+    .. math:: \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha)\cdots(\alpha+N-1)}
+        :label:`prob_data`
+
+    Can be reduced to:
+
+    .. math:: \frac{[\Gamma(\alpha_1+N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha_1+\alpha_0+N)}\frac{\Gamma(\alpha_1+\alpha_0)}{\Gamma{\alpha_1)\Gamma(\alpha_0)}
+        :label:`prob_data_gamma`
+
+    Using :math:`(\alpha-1)! = \Gamma(\alpha)`.
+
+
+
+    Returns:
+
+    """
+
+
 def main():
     game = NumberGame()
     samples = []
