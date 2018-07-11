@@ -247,11 +247,35 @@ def question_2():
         \frac{\Gamma(\alpha_1 + N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha+N)}\cdot\frac{\Gamma(\alpha)}{\Gamma(\alpha_1)\Gamma(\alpha_0)} &=~,~&\textrm{By the given}\\
         \frac{\Gamma(\alpha_1 + N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha_1+\alpha_0+N)}\cdot\frac{\Gamma(\alpha_1+\alpha_0)}{\Gamma(\alpha_1)\Gamma(\alpha_0)} &=~,~&\textrm{Def.}~\alpha = \alpha_1+\alpha_0
 
+    So we see that even without appealing to the Beta distribution, we can by sheer counts of the probability of the
+    data occurring arrive at the marginal likelihood for the Beta-Bernoulli model.
+
     Returns:
         None.
     """
     return None
 
+
+def question_3():
+    r""" Posterior predictive for Beta-Binomial model
+
+    Prove that :math:`p(x|n, \mathcal{D})=\frac{B(x+\alpha_1',n-x+\alpha_0')}{B(\alpha_1',\alpha_0')}\binom{n}{x}`
+    reduces to :math:`p(\tilde{x}=1|\mathcal{D})=\frac{\alpha_1'}{\alpha_1'+\alpha_0'}` when :math:`n=1`.
+
+    .. math::
+       \frac{B(x+\alpha_1',n-x+\alpha_0')}{B(\alpha_1',\alpha_0')}\binom{n}{x} &=\\
+       \frac{B(x+\alpha_1',1-x+\alpha_0')}{B(\alpha_1',\alpha_0')}\binom{1}{x} &=~&,~\textrm{Given}\\
+       \frac{B(1+\alpha_1',1-1+\alpha_0')}{B(\alpha_1',\alpha_0')}\cdot 1 &=~&,~\textrm{Given}~x=1\\
+       \frac{\Gamma(1+\alpha_1')\Gamma(\alpha_0')\Gamma(\alpha_1'+\alpha_0')}{\Gamma(1+\alpha_1'+\alpha_0')\Gamma(\alpha_1')\Gamma(\alpha_0')} &=~&,~\textrm{Def. of}~Beta\\
+       \frac{\alpha_1'\Gamma(\alpha_1')\Gamma(\alpha_1'+\alpha_0')}{(\alpha_1'+\alpha_0')\Gamma(\alpha_1'+\alpha_0')\Gamma(\alpha_1')} &=~&,~\Gamma(a+1)=a\Gamma(a)\\
+       \frac{\alpha_1'}{\alpha_1'+\alpha_0'}.
+
+    So we can see that after a single trial, the posterior predictive of getting a 1 in that trial is simply the rate
+    of getting a 1 as given by the prior, which makes sense because we haven't yet observed any data.
+    Returns:
+        None.
+    """
+    return None
 
 def main():
     game = NumberGame()

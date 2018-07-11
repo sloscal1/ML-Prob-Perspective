@@ -12,6 +12,14 @@ chapter.one\_exercises module
     :undoc-members:
     :show-inheritance:
 
+chapter.three\_exercises module
+-------------------------------
+
+.. automodule:: chapter.three_exercises
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 chapter.two\_exercises module
 -----------------------------
 
