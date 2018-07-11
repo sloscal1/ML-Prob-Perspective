@@ -12,7 +12,7 @@ class Concept:
 
     Attributes:
         name (str): The common name of the concept.
-        extension (list: int): The values in the event space this concept describes.
+        extension (list int): The values in the event space this concept describes.
         prior (float): The prior probability of this concept being selected.
     """
     def __init__(self, name, extension=[], prior=-1):
@@ -21,15 +21,15 @@ class Concept:
         self.prior = prior
 
     def likelihood(self, n_samples):
-        """
-        Compute the :math:`p(D|h) = \frac{p(D,h)}/{p(h)}`.
+        r"""
+        Compute the :math:`p(D|h) = \frac{p(D,h)}{p(h)}`.
 
         Args:
             n_samples (int): the number of samples collected from the target concept.
 
         Returns:
-            list float: the likelihood of the data given the hypothesis. This comes
-                from the strong sampling assumption
+            list float: the likelihood of the data given the hypothesis.
+                This comes from the strong sampling assumption.
         """
         return 1.0/(len(self.extension)**n_samples)
 
@@ -54,7 +54,7 @@ class NumberGame(object):
     havoc with the program.
 
     Attributes:
-        concepts (list: Concept): The possible concepts in the game.
+        concepts (list Concept): The possible concepts in the game.
         active_concept: (Concept): The current target of the game, selected at random from ``concepts``.
 
 
@@ -127,7 +127,7 @@ class NumberGame(object):
         return random.choice(self.active_concept.extension)
 
     def posterior(self, samples):
-        """ Generate the full posterior probability of all ``concepts``.
+        r""" Generate the full posterior probability of all ``concepts``.
 
         Computes the posterior :math:`p(C|\mathcal{D}) = \frac{p(\mathcal{D}|h)p(h)}{p(\mathcal{D})}`,
         substituting all possible concepts for :math:`h`.
@@ -151,18 +151,20 @@ class NumberGame(object):
         return np.divide(posteriors, denominator)
 
     def post_predictive_distribution(self, samples):
-        """
+        r"""
 
         What is the probability that any point belongs to the
         target concept given the data we've seen so far?
+
         .. math::
-            p(\tilde{x} \in C|\mathcal{D}) = \Sum_h p(y=1|\tilde{x},h)p(h|\mathcal{D}).
+            p(\tilde{x} \in C|\mathcal{D}) = \Sigma_h p(y=1|\tilde{x},h)p(h|\mathcal{D}).
 
         Where :math:`\tilde{x}` is a future observation and :math:`y=1` states that the
         observation is consistent with the given concept.
 
         Args:
             samples (list int): the samples from the target concept we've observed so far.
+
         Returns:
             list float: the posterior predictive distribution at this time.
         """
@@ -178,14 +180,14 @@ class NumberGame(object):
 
     def plugin_distribution(self, samples):
         """
-
         What is the probability that any point belongs to the target concept
         given that we "plug in" the most likely concept a posteriori?
+
         Args:
-            samples:
+            samples: the samples seen so far.
 
         Returns:
-
+            List of the posterior probabilities using the plug-in estimator.
         """
         plugin = self.concepts[np.argmax(self.posterior(samples))]
         return [1.0 if x in plugin.extension else 0.0 for x in range(1, self.max_val+1)]
@@ -198,7 +200,7 @@ def likelihood_ratio(posteriors):
 
 
 def question_1():
-    """
+    r"""
     Optimize the log likelihood of :math:`p(\mathcal{D}|\theta) = \theta^{N_1}(1-\theta)^{N_0}`
     to prove :math:`\frac{N_1}{N}`, the MLE of the Bernoulli/binomial model.
 
@@ -207,10 +209,11 @@ def question_1():
                                   &= N_1 log(\theta)+ N_0 log(1-\theta)\\
                                   &= N_1 log(\theta)+ (N-N_1)log(1-\theta).
 
-    Now, optimizing for :math:`\theta` by taking the derivative of the above:
+    Now, optimizing for :math:`\theta` by taking the derivative of the above and setting it
+    equal to 0.
 
     .. math::
-        & \frac{d}{d\theta} [N_1 log(\theta)+ (N-N_1)log(1-\theta)]\\
+        \frac{d}{d\theta} [N_1 log(\theta)+ (N-N_1)log(1-\theta)] &= \frac{N_1}{\theta} - \frac{N-N_1}{1-\theta}\\
         0 &= \frac{N_1}{\theta} - \frac{N-N_1}{1-\theta}\\
         N_1(1-\theta) &= (N-N_1)\theta\\
         N_1 - N_1\theta &= N\theta - N_1\theta\\
@@ -224,24 +227,30 @@ def question_1():
 
 
 def question_2():
-    """
+    r"""
     Show that:
 
     .. math:: \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha)\cdots(\alpha+N-1)}
-        :label:`prob_data`
 
     Can be reduced to:
 
-    .. math:: \frac{[\Gamma(\alpha_1+N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha_1+\alpha_0+N)}\frac{\Gamma(\alpha_1+\alpha_0)}{\Gamma{\alpha_1)\Gamma(\alpha_0)}
-        :label:`prob_data_gamma`
+    .. math:: \frac{[\Gamma(\alpha_1+N_1)\Gamma(\alpha_0+N_0)]}{\Gamma(\alpha_1+\alpha_0+N)}\frac{\Gamma(\alpha_1+\alpha_0)}{\Gamma(\alpha_1)\Gamma(\alpha_0)}
 
     Using :math:`(\alpha-1)! = \Gamma(\alpha)`.
 
-
+    .. math::
+        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha)\cdots(\alpha+N-1)} &=\\
+        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha)\cdots(\alpha+N-1)}\cdot\frac{(\alpha-1)!}{(\alpha-1)!} &=\\
+        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha+N-1)!}\cdot\frac{(\alpha-1)!}{1} &=~,~&\textrm{Def. of factorial}\\
+        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha+N-1)!}\cdot\frac{(\alpha-1)!(\alpha_1-1)!(\alpha_0-1)!}{(\alpha_1-1)!(\alpha_0-1)!} &=\\
+        \frac{(\alpha_1 + N_1 - 1)!(\alpha_0+N_0-1)!}{(\alpha+N-1)!}\cdot\frac{(\alpha-1)!}{(\alpha_1-1)!(\alpha_0-1)!} &=~,~&\textrm{Def. of factorial}\\
+        \frac{\Gamma(\alpha_1 + N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha+N)}\cdot\frac{\Gamma(\alpha)}{\Gamma(\alpha_1)\Gamma(\alpha_0)} &=~,~&\textrm{By the given}\\
+        \frac{\Gamma(\alpha_1 + N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha_1+\alpha_0+N)}\cdot\frac{\Gamma(\alpha_1+\alpha_0)}{\Gamma(\alpha_1)\Gamma(\alpha_0)} &=~,~&\textrm{Def.}~\alpha = \alpha_1+\alpha_0
 
     Returns:
-
+        None.
     """
+    return None
 
 
 def main():
