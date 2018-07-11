@@ -193,13 +193,13 @@ def question_2():
     to allow it to work with python 3. Or, you can fix the few compatibillity
     errors yourself_ .
 
-    ```
-    git clone https://github.com/primetang/pyflann.git
-    cd pyflann
-    git fetch origin pull/7/head:python36
-    git checkout python36
-    python setup.py install
-    ```
+    .. code-block:: bash
+
+        git clone https://github.com/primetang/pyflann.git
+        cd pyflann
+        git fetch origin pull/7/head:python36
+        git checkout python36
+        python setup.py install
 
     In the end, the speedup is quite drastic. As the sample size doubles
     from 500 to 1000 to 2000 there is almost no change in speed for the FLANN
