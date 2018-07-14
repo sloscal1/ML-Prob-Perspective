@@ -245,6 +245,22 @@ version; however, the time increases substantially for the Linear version.</p>
 <span id="chapter-three-exercises-module"></span><h2>chapter.three_exercises module<a class="headerlink" href="#module-chapter.three_exercises" title="Permalink to this headline">¶</a></h2>
 <p>Worked examples and exercises from Chapter 3.</p>
 <dl class="class">
+<dt id="chapter.three_exercises.BetaBinomial">
+<em class="property">class </em><code class="descclassname">chapter.three_exercises.</code><code class="descname">BetaBinomial</code><span class="sig-paren">(</span><em>alpha_0</em>, <em>alpha_1</em>, <em>seed=1337</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#BetaBinomial"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.BetaBinomial" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="chapter.three_exercises.BetaBinomial.posterior">
+<code class="descname">posterior</code><span class="sig-paren">(</span><em>samples</em>, <em>freq=100</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#BetaBinomial.posterior"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.BetaBinomial.posterior" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="chapter.three_exercises.BetaBinomial.sample">
+<code class="descname">sample</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#BetaBinomial.sample"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.BetaBinomial.sample" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
 <dt id="chapter.three_exercises.Concept">
 <em class="property">class </em><code class="descclassname">chapter.three_exercises.</code><code class="descname">Concept</code><span class="sig-paren">(</span><em>name</em>, <em>extension=[]</em>, <em>prior=-1</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#Concept"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.Concept" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -395,13 +411,18 @@ substituting all possible concepts for <span class="math notranslate nohighlight
 </dd></dl>
 
 <dl class="function">
+<dt id="chapter.three_exercises.bb_main">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">bb_main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#bb_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.bb_main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="function">
 <dt id="chapter.three_exercises.likelihood_ratio">
 <code class="descclassname">chapter.three_exercises.</code><code class="descname">likelihood_ratio</code><span class="sig-paren">(</span><em>posteriors</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#likelihood_ratio"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.likelihood_ratio" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
-<dt id="chapter.three_exercises.main">
-<code class="descclassname">chapter.three_exercises.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.main" title="Permalink to this definition">¶</a></dt>
+<dt id="chapter.three_exercises.numbers_main">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">numbers_main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#numbers_main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.numbers_main" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
 
 <dl class="function">
@@ -478,6 +499,151 @@ reduces to <span class="math notranslate nohighlight">\(p(\tilde{x}=1|\mathcal{D
 <p>So we can see that after a single trial, the posterior predictive of getting a 1 in that trial is simply the rate
 of getting a 1 as given by the prior, which makes sense because we haven’t yet observed any data.
 :returns: None.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.three_exercises.question_4">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">question_4</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#question_4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.question_4" title="Permalink to this definition">¶</a></dt>
+<dd><p>Simple mixture distribution.</p>
+<p>Let’s say we tossed a fair coin 5 times and know that &lt; 3 heads appeared. Compute the posterior up to
+normalization constant..</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(X &lt; 3 | \theta) &amp;= p(X=0 | \theta) + p(X=1 | \theta) + p(X=2|\theta),~&amp;\textrm{Union of mutually exclusive events.}\\
+                  &amp;\propto B(\theta|1,1)Bin(0|\theta,5) + B(\theta|1,1)Bin(1|\theta,5) + B(\theta|1,1)Bin(2|\theta,5),~&amp;\textrm{Bayes law}\\
+                  &amp;\propto B(\theta|1,6) + B(\theta|2,5) + B(\theta|3,4),~&amp;\textrm{Conjugate prior}.\end{split}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.three_exercises.question_5">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">question_5</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#question_5"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.question_5" title="Permalink to this definition">¶</a></dt>
+<dd><p>Uninformative prior for log-odds ratio.</p>
+<p>Let <span class="math notranslate nohighlight">\(\phi = \textrm{logit}(\theta) = log\frac{\theta}{1-\theta}\)</span>.
+Show that if <span class="math notranslate nohighlight">\(p(\phi) \propto 1\)</span>, then <span class="math notranslate nohighlight">\(p(\theta) \propto Beta(\theta|0, 0)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(\phi) &amp;= p(\theta)\left\vert\frac{d \theta}{d \phi}\right\vert,~&amp;\textrm{Change of variables}\\
+        &amp;= log\frac{\theta}{1-\theta}\left\vert\frac{d\theta}{d\phi}\right\vert,\\
+        &amp;= log\theta - log(1-\theta)\left\vert\frac{d\theta}{d\phi}\right\vert,\\
+        &amp;= \frac{1}{\theta} + \frac{1}{1-\theta},\\
+        &amp;= \frac{\theta + 1 - \theta}{\theta(1-\theta)},\\
+        &amp;= \frac{1}{\theta(1-\theta)},\\
+        &amp;= \theta^{-1}(1-\theta)^{-1},\\
+        &amp;= B(\theta|0, 0),~&amp;\textrm{Def. of Beta}.\end{split}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.three_exercises.question_6">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">question_6</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#question_6"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.question_6" title="Permalink to this definition">¶</a></dt>
+<dd><p>MLE for the Poisson distribution.
+<span class="math notranslate nohighlight">\(Poi(x|\lambda) = e^{-\lambda}\frac{\lambda^x}{x!}\)</span>. Derive the MLE.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(\lambda|x_1,\ldots,x_n) &amp;= e^{-\lambda}\frac{\lambda^{x_1}}{x_1!}\cdots e^{-\lambda}\frac{\lambda^{x_n}}{x_n!},~&amp;X~\sim~Poi(\lambda)\\
+    &amp;= e^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!}.\end{split}\]</div>
+<p>Set take the derivative and set it equal to 0 to find the maximum:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\frac{d}{d\lambda}p(\lambda|x_1,\ldots,x_n) &amp;= -ne^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!} + e^{-n\lambda}\frac{(x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1}}{\prod_i^n x_i!},\\
+    ne^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!} &amp;= e^{-n\lambda}\frac{(x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1}}{\prod_i^n x_i!},\\
+    n\lambda^{x_1+\cdots+x_n} &amp;= (x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1},\\
+    n\lambda &amp;= \sum_i^n x_i,\\
+    \lambda &amp;= \frac{1}{n}\sum_i^n x_i.\end{split}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.three_exercises.question_7">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">question_7</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#question_7"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.question_7" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bayesian derivation of Poisson MLE.</p>
+<ol class="loweralpha simple">
+<li>Derive the posterior assuming a conjugate prior <span class="math notranslate nohighlight">\(p(\lambda) = Ga(\lambda|a,b) \propto \lambda^{a-1}e^{-\lambda b}\)</span>.</li>
+</ol>
+<p>From the above, the likelihood of the Poisson distribution is: <span class="math notranslate nohighlight">\(e^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!}\)</span>,
+so we can write the posterior as:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(\lambda|D) &amp;\propto \lambda^{a-1}e^{-\lambda b}e^{-n\lambda}\lambda^{x_1+\cdots+x_n}\\
+    &amp;= e^{-\lambda b -\lambda n}\lambda^{a+x_1+\cdots+x_n-1}\\
+    &amp;= Ga(a+x_1+\cdots+x_n-1, b+n)\end{split}\]</div>
+<ol class="loweralpha simple" start="2">
+<li>The MLE of the posterior looks can be found:</li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}0 &amp;= \frac{d}{d\lambda}e^{-\lambda b -\lambda n}\lambda^{a+x_1+\cdots+x_n-1}\\
+  &amp;= -(b+n)e^{-\lambda(b+n)}\lambda^{a+x_1+\cdots+x_n-1}+e^{-\lambda b -\lambda n}(a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\
+(b+n)e^{-\lambda(b+n)}\lambda^{a+x_1+\cdots+x_n-1} &amp;= e^{-\lambda b -\lambda n}(a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\
+(b+n)\lambda^{a+x_1+\cdots+x_n-1} &amp;= (a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\
+(b+n)\lambda &amp;= a+x_1+\cdots+x_n-1\\
+\lambda &amp;= \frac{a-1+\sum_i  x_i}{b+n}.\end{split}\]</div>
+<p>If we look at what happens as the prior parameters <span class="math notranslate nohighlight">\(a, b \rightarrow 0\)</span>, we see that the mean of the posterior
+approaches the MLE of the Poisson distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.three_exercises.question_8">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">question_8</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#question_8"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.question_8" title="Permalink to this definition">¶</a></dt>
+<dd><p>MLE for the uniform distribution.</p>
+<ol class="loweralpha simple">
+<li>What is the MLE for data <span class="math notranslate nohighlight">\(x_1,\ldots,x_n\)</span>?</li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(a|x_1,\ldots,x_n) &amp;= \frac{\sum_i x_i}{(2a)^2}&amp;\\
+    &amp;= \frac{-\sum_i x_i}{8a},~&amp;\textrm{Der. with respect to}~a\\
+0   &amp;= \frac{-\sum_i x_i}{8a},~&amp;\textrm{Set equal to 0 to find maximum}.\end{split}\]</div>
+<p>This is where some insight comes in. Solving for <span class="math notranslate nohighlight">\(a\)</span> doesn’t really work, but
+if you think about plotting this function (for some fixed sum of data), you see that
+it approaches 0 as <span class="math notranslate nohighlight">\(a\)</span> increases. The MLE occurs when <span class="math notranslate nohighlight">\(\hat{a} = max |x_i|, x_i \in {x_1,\ldots,x_n}\)</span>
+since it captures all the data seen so far and there’s no support for anything further out
+in magnitude on the number line.</p>
+<ol class="loweralpha simple" start="2">
+<li>The probability the model would assign to point <span class="math notranslate nohighlight">\(x_{n+1}\)</span> is:</li>
+</ol>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(x_{n+1}|\hat{a}) &amp;= \frac{1}{2\hat{a}},\\
+    &amp;= \frac{1}{2x_{\textrm{max}}}.\end{split}\]</div>
+<ol class="loweralpha simple" start="3">
+<li>This doesn’t make a great deal of sense, especially if only a few data points have been observed.</li>
+</ol>
+<p>It states that
+the only points that will be observed will be no bigger than <span class="math notranslate nohighlight">\(|x_{\textrm{max}}|\)</span>. In reality, the only thing
+we know for sure is that <span class="math notranslate nohighlight">\(a\)</span> is at least that large. We may instead set a prior on <span class="math notranslate nohighlight">\(a\)</span> that takes into
+account the range of feasible values based on the specific problem. It would have the effect of broadening the range
+of values we expect to see, eventually tightening to all the points we’ve seen so far.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

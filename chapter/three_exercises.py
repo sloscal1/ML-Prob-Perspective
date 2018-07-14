@@ -5,6 +5,8 @@ import math
 import random
 
 import numpy as np
+import pandas as pd
+from scipy.stats import beta
 
 
 class Concept:
@@ -199,6 +201,31 @@ def likelihood_ratio(posteriors):
     return lr
 
 
+class BetaBinomial:
+    def __init__(self, alpha_0, alpha_1, seed=1337):
+        self.alpha_0 = alpha_0
+        self.alpha_1 = alpha_1
+        random.seed = seed
+        self.rate = random.random()
+
+    def sample(self):
+        return 0.0 if random.random() > self.rate else 1.0
+
+    def posterior(self, samples, freq=100):
+        counts = list((0, 0))
+        for sample in samples:
+            counts[sample] += 1
+        alpha = counts[1]+self.alpha_1-1
+        beta = counts[0]+self.alpha_0-1
+        posterior = pd.DataFrame(columns=["theta", "prob"])
+        posterior["theta"] = np.linspace(0, 1, freq)
+        posterior = posterior.assign(prob=lambda x: x.theta**alpha*(1-x.theta)**beta)
+        norm = posterior.prob.sum()
+        posterior = posterior.assign(prob=lambda x: x.prob/norm)
+        posterior = posterior.set_index("theta")
+        return posterior
+
+
 def question_1():
     r"""
     Optimize the log likelihood of :math:`p(\mathcal{D}|\theta) = \theta^{N_1}(1-\theta)^{N_0}`
@@ -277,7 +304,136 @@ def question_3():
     """
     return None
 
-def main():
+def question_4():
+    r""" Simple mixture distribution.
+
+    Let's say we tossed a fair coin 5 times and know that < 3 heads appeared. Compute the posterior up to
+    normalization constant..
+
+    .. math::
+        p(X < 3 | \theta) &= p(X=0 | \theta) + p(X=1 | \theta) + p(X=2|\theta),~&\textrm{Union of mutually exclusive events.}\\
+                          &\propto B(\theta|1,1)Bin(0|\theta,5) + B(\theta|1,1)Bin(1|\theta,5) + B(\theta|1,1)Bin(2|\theta,5),~&\textrm{Bayes law}\\
+                          &\propto B(\theta|1,6) + B(\theta|2,5) + B(\theta|3,4),~&\textrm{Conjugate prior}.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_5():
+    r""" Uninformative prior for log-odds ratio.
+
+    Let :math:`\phi = \textrm{logit}(\theta) = log\frac{\theta}{1-\theta}`.
+    Show that if :math:`p(\phi) \propto 1`, then :math:`p(\theta) \propto Beta(\theta|0, 0)`.
+
+    .. math::
+        p(\phi) &= p(\theta)\left\vert\frac{d \theta}{d \phi}\right\vert,~&\textrm{Change of variables}\\
+                &= log\frac{\theta}{1-\theta}\left\vert\frac{d\theta}{d\phi}\right\vert,\\
+                &= log\theta - log(1-\theta)\left\vert\frac{d\theta}{d\phi}\right\vert,\\
+                &= \frac{1}{\theta} + \frac{1}{1-\theta},\\
+                &= \frac{\theta + 1 - \theta}{\theta(1-\theta)},\\
+                &= \frac{1}{\theta(1-\theta)},\\
+                &= \theta^{-1}(1-\theta)^{-1},\\
+                &= B(\theta|0, 0),~&\textrm{Def. of Beta}.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_6():
+    r""" MLE for the Poisson distribution.
+    :math:`Poi(x|\lambda) = e^{-\lambda}\frac{\lambda^x}{x!}`. Derive the MLE.
+
+    .. math::
+        p(\lambda|x_1,\ldots,x_n) &= e^{-\lambda}\frac{\lambda^{x_1}}{x_1!}\cdots e^{-\lambda}\frac{\lambda^{x_n}}{x_n!},~&X~\sim~Poi(\lambda)\\
+            &= e^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!}.
+
+    Set take the derivative and set it equal to 0 to find the maximum:
+
+    .. math::
+        \frac{d}{d\lambda}p(\lambda|x_1,\ldots,x_n) &= -ne^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!} + e^{-n\lambda}\frac{(x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1}}{\prod_i^n x_i!},\\
+            ne^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!} &= e^{-n\lambda}\frac{(x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1}}{\prod_i^n x_i!},\\
+            n\lambda^{x_1+\cdots+x_n} &= (x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1},\\
+            n\lambda &= \sum_i^n x_i,\\
+            \lambda &= \frac{1}{n}\sum_i^n x_i.
+
+    Returns:
+        None.
+    """
+    return None
+
+def question_7():
+    r""" Bayesian derivation of Poisson MLE.
+
+    a) Derive the posterior assuming a conjugate prior :math:`p(\lambda) = Ga(\lambda|a,b) \propto \lambda^{a-1}e^{-\lambda b}`.
+
+    From the above, the likelihood of the Poisson distribution is: :math:`e^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!}`,
+    so we can write the posterior as:
+
+    .. math::
+        p(\lambda|D) &\propto \lambda^{a-1}e^{-\lambda b}e^{-n\lambda}\lambda^{x_1+\cdots+x_n}\\
+            &= e^{-\lambda b -\lambda n}\lambda^{a+x_1+\cdots+x_n-1}\\
+            &= Ga(a+x_1+\cdots+x_n-1, b+n)
+
+    b) The MLE of the posterior looks can be found:
+
+    .. math::
+        0 &= \frac{d}{d\lambda}e^{-\lambda b -\lambda n}\lambda^{a+x_1+\cdots+x_n-1}\\
+          &= -(b+n)e^{-\lambda(b+n)}\lambda^{a+x_1+\cdots+x_n-1}+e^{-\lambda b -\lambda n}(a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\
+        (b+n)e^{-\lambda(b+n)}\lambda^{a+x_1+\cdots+x_n-1} &= e^{-\lambda b -\lambda n}(a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\
+        (b+n)\lambda^{a+x_1+\cdots+x_n-1} &= (a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\
+        (b+n)\lambda &= a+x_1+\cdots+x_n-1\\
+        \lambda &= \frac{a-1+\sum_i  x_i}{b+n}.
+
+    If we look at what happens as the prior parameters :math:`a, b \rightarrow 0`, we see that the mean of the posterior
+    approaches the MLE of the Poisson distribution.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_8():
+    r""" MLE for the uniform distribution.
+
+    a) What is the MLE for data :math:`x_1,\ldots,x_n`?
+
+    .. math::
+        p(a|x_1,\ldots,x_n) &= \frac{\sum_i x_i}{(2a)^2}&\\
+            &= \frac{-\sum_i x_i}{8a},~&\textrm{Der. with respect to}~a\\
+        0   &= \frac{-\sum_i x_i}{8a},~&\textrm{Set equal to 0 to find maximum}.
+
+    This is where some insight comes in. Solving for :math:`a` doesn't really work, but
+    if you think about plotting this function (for some fixed sum of data), you see that
+    it approaches 0 as :math:`a` increases. The MLE occurs when :math:`\hat{a} = max |x_i|, x_i \in {x_1,\ldots,x_n}`
+    since it captures all the data seen so far and there's no support for anything further out
+    in magnitude on the number line.
+
+    b) The probability the model would assign to point :math:`x_{n+1}` is:
+
+    .. math::
+        p(x_{n+1}|\hat{a}) &= \frac{1}{2\hat{a}},\\
+            &= \frac{1}{2x_{\textrm{max}}}.
+
+    c) This doesn't make a great deal of sense, especially if only a few data points have been observed.
+
+    It states that
+    the only points that will be observed will be no bigger than :math:`|x_{\textrm{max}}|`. In reality, the only thing
+    we know for sure is that :math:`a` is at least that large. We may instead set a prior on :math:`a` that takes into
+    account the range of feasible values based on the specific problem. It would have the effect of broadening the range
+    of values we expect to see, eventually tightening to all the points we've seen so far.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def numbers_main():
     game = NumberGame()
     samples = []
     while (
@@ -293,7 +449,18 @@ def main():
     print(f"True concept: {game.active_concept}")
 
 
-if __name__ == "__main__":
-    main()
+def bb_main():
+    bb = BetaBinomial(5, 2)
+    samples = list(np.ones(11, dtype=np.int))+list(np.zeros(13, dtype=np.int))
+    df = bb.posterior(samples)
+    print(df)
+    print(df.prob.idxmax())
+    print(df.prob.sum())
+    print(4/22)
+    print(15/29)
 
+
+if __name__ == "__main__":
+    #bb_main()
+    question_4()
 

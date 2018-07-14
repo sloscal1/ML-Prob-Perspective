@@ -1,0 +1,669 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>chapter.three_exercises &mdash; Machine Learning: A Probabilistic Perspective 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> Machine Learning: A Probabilistic Perspective
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">chapter</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Machine Learning: A Probabilistic Perspective</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>chapter.three_exercises</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for chapter.three_exercises</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; Worked examples and exercises from Chapter 3.</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">random</span>
+
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">from</span> <span class="nn">scipy.stats</span> <span class="k">import</span> <span class="n">beta</span>
+
+
+<div class="viewcode-block" id="Concept"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.Concept">[docs]</a><span class="k">class</span> <span class="nc">Concept</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; This is a concept or hypothesis from the Numbers Game.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        name (str): The common name of the concept.</span>
+<span class="sd">        extension (list int): The values in the event space this concept describes.</span>
+<span class="sd">        prior (float): The prior probability of this concept being selected.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">extension</span><span class="o">=</span><span class="p">[],</span> <span class="n">prior</span><span class="o">=-</span><span class="mi">1</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">extension</span> <span class="o">=</span> <span class="n">extension</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">prior</span>
+
+<div class="viewcode-block" id="Concept.likelihood"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.Concept.likelihood">[docs]</a>    <span class="k">def</span> <span class="nf">likelihood</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">n_samples</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Compute the :math:`p(D|h) = \frac{p(D,h)}{p(h)}`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            n_samples (int): the number of samples collected from the target concept.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list float: the likelihood of the data given the hypothesis.</span>
+<span class="sd">                This comes from the strong sampling assumption.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">extension</span><span class="p">)</span><span class="o">**</span><span class="n">n_samples</span><span class="p">)</span></div>
+
+    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">f</span><span class="s2">&quot;Concept(name=</span><span class="si">{self.name}</span><span class="s2">,extension=</span><span class="si">{self.extension}</span><span class="s2">,prior=</span><span class="si">{self.prior}</span><span class="s2">)&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">name</span></div>
+
+
+<div class="viewcode-block" id="NumberGame"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.NumberGame">[docs]</a><span class="k">class</span> <span class="nc">NumberGame</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; The game as described in Chapter 3 but used by Joshua Tenenbaum in his PhD Thesis.</span>
+
+<span class="sd">    The game demonstrates that it is possible to select a correct hypothesis using only</span>
+<span class="sd">    positive examples from the target.</span>
+
+<span class="sd">    Note: It is critical that all the candidate concepts are distinct. This might seem obvious,</span>
+<span class="sd">    but there are often many ways to describe the same concept in language. For example, consider</span>
+<span class="sd">    ``multiples of 10`` and ``ends in 0`` for the space :math:`[1, 100]`. These are clearly different</span>
+<span class="sd">    ideas, but they have the same extension in the space. This means that if one is the target, the</span>
+<span class="sd">    other is equally likely. This causes the optimization to converge to 0.5 instead of 1.0, playing</span>
+<span class="sd">    havoc with the program.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        concepts (list Concept): The possible concepts in the game.</span>
+<span class="sd">        active_concept: (Concept): The current target of the game, selected at random from ``concepts``.</span>
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">seed</span><span class="p">:</span>
+            <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+            <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">seed</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span> <span class="o">=</span> <span class="mi">100</span>
+        <span class="n">primes</span> <span class="o">=</span> <span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+        <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">):</span>
+            <span class="k">if</span> <span class="nb">all</span><span class="p">([</span><span class="n">num</span> <span class="o">%</span> <span class="n">prime</span> <span class="k">for</span> <span class="n">prime</span> <span class="ow">in</span> <span class="n">primes</span><span class="p">]):</span>
+                <span class="n">primes</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">extend</span><span class="p">(</span>
+            <span class="p">[</span>
+                <span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;odd&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">num</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)],</span> <span class="mf">0.15</span><span class="p">),</span>
+                <span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;squares&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">num</span><span class="o">*</span><span class="n">num</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">11</span><span class="p">)]),</span>
+                <span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;primes&quot;</span><span class="p">,</span> <span class="n">primes</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span>
+                <span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;all&quot;</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="o">+</span><span class="mi">1</span><span class="p">))),</span>
+            <span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">11</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Concept</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;mult of </span><span class="si">{val}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">num</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="n">val</span><span class="p">)]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Concept</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;ends in </span><span class="si">{val}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">num</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">)]))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">Concept</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;power of </span><span class="si">{val}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="p">[</span><span class="n">val</span><span class="o">**</span><span class="n">num</span> <span class="k">for</span> <span class="n">num</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="nb">int</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">floor</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="p">,</span> <span class="n">val</span><span class="p">)))</span><span class="o">+</span><span class="mi">1</span><span class="p">)]))</span>
+        <span class="c1"># Find the concept mult of 2 and replace it with even</span>
+        <span class="n">pos</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;mult of 2&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="s2">&quot;even&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">[</span><span class="n">pos</span><span class="p">]</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="mf">0.15</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">Concept</span><span class="p">(</span>
+                <span class="s2">&quot;power of 2 + (37)&quot;</span><span class="p">,</span>
+                <span class="p">[</span>
+                    <span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;power of 2&quot;</span><span class="p">))]</span><span class="o">.</span><span class="n">extension</span><span class="p">,</span>
+                        <span class="mi">37</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">&lt;=</span> <span class="mi">100</span>
+                <span class="p">],</span>
+                <span class="mf">0.0005</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+            <span class="n">Concept</span><span class="p">(</span>
+                <span class="s2">&quot;power of 2 - (37)&quot;</span><span class="p">,</span>
+                <span class="p">[</span>
+                    <span class="n">val</span> <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">add</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;power of 2&quot;</span><span class="p">))]</span><span class="o">.</span><span class="n">extension</span><span class="p">,</span>
+                        <span class="o">-</span><span class="mi">37</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">val</span> <span class="o">&gt;</span> <span class="mi">0</span>
+                <span class="p">],</span>
+                <span class="mf">0.0005</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">Concept</span><span class="p">(</span><span class="s2">&quot;ends in 10&quot;</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_concept</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">other_priors</span> <span class="o">=</span> <span class="mf">1.0</span><span class="o">/</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">)</span> <span class="o">-</span> <span class="nb">len</span><span class="p">([</span><span class="n">concept</span> <span class="k">for</span> <span class="n">concept</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span> <span class="k">if</span> <span class="n">concept</span><span class="o">.</span><span class="n">prior</span> <span class="o">!=</span> <span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">concept</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">concept</span><span class="o">.</span><span class="n">prior</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+                <span class="n">concept</span><span class="o">.</span><span class="n">prior</span> <span class="o">=</span> <span class="n">other_priors</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">active_concept</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">))</span>
+
+<div class="viewcode-block" id="NumberGame.sample_from_concept"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.NumberGame.sample_from_concept">[docs]</a>    <span class="k">def</span> <span class="nf">sample_from_concept</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Generate a single sample from the ``active_concept``.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            int: a number from the active concept.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">random</span><span class="o">.</span><span class="n">choice</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">active_concept</span><span class="o">.</span><span class="n">extension</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumberGame.posterior"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.NumberGame.posterior">[docs]</a>    <span class="k">def</span> <span class="nf">posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Generate the full posterior probability of all ``concepts``.</span>
+
+<span class="sd">        Computes the posterior :math:`p(C|\mathcal{D}) = \frac{p(\mathcal{D}|h)p(h)}{p(\mathcal{D})}`,</span>
+<span class="sd">        substituting all possible concepts for :math:`h`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            samples (list: int): All samples generated by the target concept so far.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list float: the posterior probability of all ``concepts``.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">unique_samps</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="n">denominator</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">posteriors</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">n_samps</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">concept</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">:</span>
+            <span class="n">num</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">if</span> <span class="n">unique_samps</span><span class="o">.</span><span class="n">issubset</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">concept</span><span class="o">.</span><span class="n">extension</span><span class="p">)):</span>
+                <span class="n">num</span> <span class="o">=</span> <span class="n">concept</span><span class="o">.</span><span class="n">prior</span><span class="o">*</span><span class="n">concept</span><span class="o">.</span><span class="n">likelihood</span><span class="p">(</span><span class="n">n_samps</span><span class="p">)</span>
+            <span class="n">denominator</span> <span class="o">+=</span> <span class="n">num</span>
+            <span class="n">posteriors</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">num</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">divide</span><span class="p">(</span><span class="n">posteriors</span><span class="p">,</span> <span class="n">denominator</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="NumberGame.post_predictive_distribution"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.NumberGame.post_predictive_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">post_predictive_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+        <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        What is the probability that any point belongs to the</span>
+<span class="sd">        target concept given the data we&#39;ve seen so far?</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            p(\tilde{x} \in C|\mathcal{D}) = \Sigma_h p(y=1|\tilde{x},h)p(h|\mathcal{D}).</span>
+
+<span class="sd">        Where :math:`\tilde{x}` is a future observation and :math:`y=1` states that the</span>
+<span class="sd">        observation is consistent with the given concept.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            samples (list int): the samples from the target concept we&#39;ve observed so far.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list float: the posterior predictive distribution at this time.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">post_pred_dist</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">posteriors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">point</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="o">+</span><span class="mi">1</span><span class="p">):</span>
+            <span class="n">post_pred</span> <span class="o">=</span> <span class="mi">0</span>
+            <span class="k">for</span> <span class="n">concept</span><span class="p">,</span> <span class="n">posterior</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">,</span> <span class="n">posteriors</span><span class="p">)):</span>
+                <span class="k">if</span> <span class="n">point</span> <span class="ow">in</span> <span class="n">concept</span><span class="o">.</span><span class="n">extension</span><span class="p">:</span>
+                    <span class="n">post_pred</span> <span class="o">+=</span> <span class="n">posterior</span>
+            <span class="n">post_pred_dist</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">post_pred</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">post_pred_dist</span></div>
+
+<div class="viewcode-block" id="NumberGame.plugin_distribution"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.NumberGame.plugin_distribution">[docs]</a>    <span class="k">def</span> <span class="nf">plugin_distribution</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        What is the probability that any point belongs to the target concept</span>
+<span class="sd">        given that we &quot;plug in&quot; the most likely concept a posteriori?</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            samples: the samples seen so far.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            List of the posterior probabilities using the plug-in estimator.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">plugin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">concepts</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">samples</span><span class="p">))]</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mf">1.0</span> <span class="k">if</span> <span class="n">x</span> <span class="ow">in</span> <span class="n">plugin</span><span class="o">.</span><span class="n">extension</span> <span class="k">else</span> <span class="mf">0.0</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_val</span><span class="o">+</span><span class="mi">1</span><span class="p">)]</span></div></div>
+
+
+<div class="viewcode-block" id="likelihood_ratio"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.likelihood_ratio">[docs]</a><span class="k">def</span> <span class="nf">likelihood_ratio</span><span class="p">(</span><span class="n">posteriors</span><span class="p">):</span>
+    <span class="n">temps</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">posteriors</span><span class="p">)</span>
+    <span class="n">lr</span> <span class="o">=</span> <span class="n">temps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">/</span><span class="n">temps</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">lr</span></div>
+
+
+<div class="viewcode-block" id="BetaBinomial"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.BetaBinomial">[docs]</a><span class="k">class</span> <span class="nc">BetaBinomial</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">alpha_0</span><span class="p">,</span> <span class="n">alpha_1</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1337</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_0</span> <span class="o">=</span> <span class="n">alpha_0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">alpha_1</span> <span class="o">=</span> <span class="n">alpha_1</span>
+        <span class="n">random</span><span class="o">.</span><span class="n">seed</span> <span class="o">=</span> <span class="n">seed</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="o">=</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span>
+
+<div class="viewcode-block" id="BetaBinomial.sample"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.BetaBinomial.sample">[docs]</a>    <span class="k">def</span> <span class="nf">sample</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="mf">0.0</span> <span class="k">if</span> <span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">rate</span> <span class="k">else</span> <span class="mf">1.0</span></div>
+
+<div class="viewcode-block" id="BetaBinomial.posterior"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.BetaBinomial.posterior">[docs]</a>    <span class="k">def</span> <span class="nf">posterior</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">samples</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="mi">100</span><span class="p">):</span>
+        <span class="n">counts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+        <span class="k">for</span> <span class="n">sample</span> <span class="ow">in</span> <span class="n">samples</span><span class="p">:</span>
+            <span class="n">counts</span><span class="p">[</span><span class="n">sample</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="n">alpha</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_1</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="n">counts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">alpha_0</span><span class="o">-</span><span class="mi">1</span>
+        <span class="n">posterior</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">,</span> <span class="s2">&quot;prob&quot;</span><span class="p">])</span>
+        <span class="n">posterior</span><span class="p">[</span><span class="s2">&quot;theta&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">freq</span><span class="p">)</span>
+        <span class="n">posterior</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">prob</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">theta</span><span class="o">**</span><span class="n">alpha</span><span class="o">*</span><span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">x</span><span class="o">.</span><span class="n">theta</span><span class="p">)</span><span class="o">**</span><span class="n">beta</span><span class="p">)</span>
+        <span class="n">norm</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">prob</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+        <span class="n">posterior</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">assign</span><span class="p">(</span><span class="n">prob</span><span class="o">=</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">prob</span><span class="o">/</span><span class="n">norm</span><span class="p">)</span>
+        <span class="n">posterior</span> <span class="o">=</span> <span class="n">posterior</span><span class="o">.</span><span class="n">set_index</span><span class="p">(</span><span class="s2">&quot;theta&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">posterior</span></div></div>
+
+
+<div class="viewcode-block" id="question_1"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_1">[docs]</a><span class="k">def</span> <span class="nf">question_1</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Optimize the log likelihood of :math:`p(\mathcal{D}|\theta) = \theta^{N_1}(1-\theta)^{N_0}`</span>
+<span class="sd">    to prove :math:`\frac{N_1}{N}`, the MLE of the Bernoulli/binomial model.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        log(p(\mathcal{D}|\theta) &amp;= log(\theta^{N_1}(1-\theta)^{N_0})\\</span>
+<span class="sd">                                  &amp;= N_1 log(\theta)+ N_0 log(1-\theta)\\</span>
+<span class="sd">                                  &amp;= N_1 log(\theta)+ (N-N_1)log(1-\theta).</span>
+
+<span class="sd">    Now, optimizing for :math:`\theta` by taking the derivative of the above and setting it</span>
+<span class="sd">    equal to 0.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \frac{d}{d\theta} [N_1 log(\theta)+ (N-N_1)log(1-\theta)] &amp;= \frac{N_1}{\theta} - \frac{N-N_1}{1-\theta}\\</span>
+<span class="sd">        0 &amp;= \frac{N_1}{\theta} - \frac{N-N_1}{1-\theta}\\</span>
+<span class="sd">        N_1(1-\theta) &amp;= (N-N_1)\theta\\</span>
+<span class="sd">        N_1 - N_1\theta &amp;= N\theta - N_1\theta\\</span>
+<span class="sd">        N_1 &amp;= N\theta\\</span>
+<span class="sd">        \frac{N_1}{N} &amp;= \theta\\</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_2"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_2">[docs]</a><span class="k">def</span> <span class="nf">question_2</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Show that:</span>
+
+<span class="sd">    .. math:: \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha)\cdots(\alpha+N-1)}</span>
+
+<span class="sd">    Can be reduced to:</span>
+
+<span class="sd">    .. math:: \frac{[\Gamma(\alpha_1+N_1)\Gamma(\alpha_0+N_0)]}{\Gamma(\alpha_1+\alpha_0+N)}\frac{\Gamma(\alpha_1+\alpha_0)}{\Gamma(\alpha_1)\Gamma(\alpha_0)}</span>
+
+<span class="sd">    Using :math:`(\alpha-1)! = \Gamma(\alpha)`.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha)\cdots(\alpha+N-1)} &amp;=\\</span>
+<span class="sd">        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha)\cdots(\alpha+N-1)}\cdot\frac{(\alpha-1)!}{(\alpha-1)!} &amp;=\\</span>
+<span class="sd">        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha+N-1)!}\cdot\frac{(\alpha-1)!}{1} &amp;=~,~&amp;\textrm{Def. of factorial}\\</span>
+<span class="sd">        \frac{[(\alpha_1)\cdots(\alpha_1 + N_1 - 1)][(\alpha_0)\cdots(\alpha_0+N_0-1)]}{(\alpha+N-1)!}\cdot\frac{(\alpha-1)!(\alpha_1-1)!(\alpha_0-1)!}{(\alpha_1-1)!(\alpha_0-1)!} &amp;=\\</span>
+<span class="sd">        \frac{(\alpha_1 + N_1 - 1)!(\alpha_0+N_0-1)!}{(\alpha+N-1)!}\cdot\frac{(\alpha-1)!}{(\alpha_1-1)!(\alpha_0-1)!} &amp;=~,~&amp;\textrm{Def. of factorial}\\</span>
+<span class="sd">        \frac{\Gamma(\alpha_1 + N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha+N)}\cdot\frac{\Gamma(\alpha)}{\Gamma(\alpha_1)\Gamma(\alpha_0)} &amp;=~,~&amp;\textrm{By the given}\\</span>
+<span class="sd">        \frac{\Gamma(\alpha_1 + N_1)\Gamma(\alpha_0+N_0)}{\Gamma(\alpha_1+\alpha_0+N)}\cdot\frac{\Gamma(\alpha_1+\alpha_0)}{\Gamma(\alpha_1)\Gamma(\alpha_0)} &amp;=~,~&amp;\textrm{Def.}~\alpha = \alpha_1+\alpha_0</span>
+
+<span class="sd">    So we see that even without appealing to the Beta distribution, we can by sheer counts of the probability of the</span>
+<span class="sd">    data occurring arrive at the marginal likelihood for the Beta-Bernoulli model.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_3"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_3">[docs]</a><span class="k">def</span> <span class="nf">question_3</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Posterior predictive for Beta-Binomial model</span>
+
+<span class="sd">    Prove that :math:`p(x|n, \mathcal{D})=\frac{B(x+\alpha_1&#39;,n-x+\alpha_0&#39;)}{B(\alpha_1&#39;,\alpha_0&#39;)}\binom{n}{x}`</span>
+<span class="sd">    reduces to :math:`p(\tilde{x}=1|\mathcal{D})=\frac{\alpha_1&#39;}{\alpha_1&#39;+\alpha_0&#39;}` when :math:`n=1`.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">       \frac{B(x+\alpha_1&#39;,n-x+\alpha_0&#39;)}{B(\alpha_1&#39;,\alpha_0&#39;)}\binom{n}{x} &amp;=\\</span>
+<span class="sd">       \frac{B(x+\alpha_1&#39;,1-x+\alpha_0&#39;)}{B(\alpha_1&#39;,\alpha_0&#39;)}\binom{1}{x} &amp;=~&amp;,~\textrm{Given}\\</span>
+<span class="sd">       \frac{B(1+\alpha_1&#39;,1-1+\alpha_0&#39;)}{B(\alpha_1&#39;,\alpha_0&#39;)}\cdot 1 &amp;=~&amp;,~\textrm{Given}~x=1\\</span>
+<span class="sd">       \frac{\Gamma(1+\alpha_1&#39;)\Gamma(\alpha_0&#39;)\Gamma(\alpha_1&#39;+\alpha_0&#39;)}{\Gamma(1+\alpha_1&#39;+\alpha_0&#39;)\Gamma(\alpha_1&#39;)\Gamma(\alpha_0&#39;)} &amp;=~&amp;,~\textrm{Def. of}~Beta\\</span>
+<span class="sd">       \frac{\alpha_1&#39;\Gamma(\alpha_1&#39;)\Gamma(\alpha_1&#39;+\alpha_0&#39;)}{(\alpha_1&#39;+\alpha_0&#39;)\Gamma(\alpha_1&#39;+\alpha_0&#39;)\Gamma(\alpha_1&#39;)} &amp;=~&amp;,~\Gamma(a+1)=a\Gamma(a)\\</span>
+<span class="sd">       \frac{\alpha_1&#39;}{\alpha_1&#39;+\alpha_0&#39;}.</span>
+
+<span class="sd">    So we can see that after a single trial, the posterior predictive of getting a 1 in that trial is simply the rate</span>
+<span class="sd">    of getting a 1 as given by the prior, which makes sense because we haven&#39;t yet observed any data.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="question_4"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_4">[docs]</a><span class="k">def</span> <span class="nf">question_4</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Simple mixture distribution.</span>
+
+<span class="sd">    Let&#39;s say we tossed a fair coin 5 times and know that &lt; 3 heads appeared. Compute the posterior up to</span>
+<span class="sd">    normalization constant..</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(X &lt; 3 | \theta) &amp;= p(X=0 | \theta) + p(X=1 | \theta) + p(X=2|\theta),~&amp;\textrm{Union of mutually exclusive events.}\\</span>
+<span class="sd">                          &amp;\propto B(\theta|1,1)Bin(0|\theta,5) + B(\theta|1,1)Bin(1|\theta,5) + B(\theta|1,1)Bin(2|\theta,5),~&amp;\textrm{Bayes law}\\</span>
+<span class="sd">                          &amp;\propto B(\theta|1,6) + B(\theta|2,5) + B(\theta|3,4),~&amp;\textrm{Conjugate prior}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_5"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_5">[docs]</a><span class="k">def</span> <span class="nf">question_5</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Uninformative prior for log-odds ratio.</span>
+
+<span class="sd">    Let :math:`\phi = \textrm{logit}(\theta) = log\frac{\theta}{1-\theta}`.</span>
+<span class="sd">    Show that if :math:`p(\phi) \propto 1`, then :math:`p(\theta) \propto Beta(\theta|0, 0)`.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(\phi) &amp;= p(\theta)\left\vert\frac{d \theta}{d \phi}\right\vert,~&amp;\textrm{Change of variables}\\</span>
+<span class="sd">                &amp;= log\frac{\theta}{1-\theta}\left\vert\frac{d\theta}{d\phi}\right\vert,\\</span>
+<span class="sd">                &amp;= log\theta - log(1-\theta)\left\vert\frac{d\theta}{d\phi}\right\vert,\\</span>
+<span class="sd">                &amp;= \frac{1}{\theta} + \frac{1}{1-\theta},\\</span>
+<span class="sd">                &amp;= \frac{\theta + 1 - \theta}{\theta(1-\theta)},\\</span>
+<span class="sd">                &amp;= \frac{1}{\theta(1-\theta)},\\</span>
+<span class="sd">                &amp;= \theta^{-1}(1-\theta)^{-1},\\</span>
+<span class="sd">                &amp;= B(\theta|0, 0),~&amp;\textrm{Def. of Beta}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_6"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_6">[docs]</a><span class="k">def</span> <span class="nf">question_6</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; MLE for the Poisson distribution.</span>
+<span class="sd">    :math:`Poi(x|\lambda) = e^{-\lambda}\frac{\lambda^x}{x!}`. Derive the MLE.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(\lambda|x_1,\ldots,x_n) &amp;= e^{-\lambda}\frac{\lambda^{x_1}}{x_1!}\cdots e^{-\lambda}\frac{\lambda^{x_n}}{x_n!},~&amp;X~\sim~Poi(\lambda)\\</span>
+<span class="sd">            &amp;= e^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!}.</span>
+
+<span class="sd">    Set take the derivative and set it equal to 0 to find the maximum:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \frac{d}{d\lambda}p(\lambda|x_1,\ldots,x_n) &amp;= -ne^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!} + e^{-n\lambda}\frac{(x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1}}{\prod_i^n x_i!},\\</span>
+<span class="sd">            ne^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!} &amp;= e^{-n\lambda}\frac{(x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1}}{\prod_i^n x_i!},\\</span>
+<span class="sd">            n\lambda^{x_1+\cdots+x_n} &amp;= (x_1+\cdots+x_n)\lambda^{x_1+\cdots+x_n-1},\\</span>
+<span class="sd">            n\lambda &amp;= \sum_i^n x_i,\\</span>
+<span class="sd">            \lambda &amp;= \frac{1}{n}\sum_i^n x_i.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+<div class="viewcode-block" id="question_7"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_7">[docs]</a><span class="k">def</span> <span class="nf">question_7</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Bayesian derivation of Poisson MLE.</span>
+
+<span class="sd">    a) Derive the posterior assuming a conjugate prior :math:`p(\lambda) = Ga(\lambda|a,b) \propto \lambda^{a-1}e^{-\lambda b}`.</span>
+
+<span class="sd">    From the above, the likelihood of the Poisson distribution is: :math:`e^{-n\lambda}\frac{\lambda^{x_1+\cdots+x_n}}{\prod_i^n x_i!}`,</span>
+<span class="sd">    so we can write the posterior as:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(\lambda|D) &amp;\propto \lambda^{a-1}e^{-\lambda b}e^{-n\lambda}\lambda^{x_1+\cdots+x_n}\\</span>
+<span class="sd">            &amp;= e^{-\lambda b -\lambda n}\lambda^{a+x_1+\cdots+x_n-1}\\</span>
+<span class="sd">            &amp;= Ga(a+x_1+\cdots+x_n-1, b+n)</span>
+
+<span class="sd">    b) The MLE of the posterior looks can be found:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        0 &amp;= \frac{d}{d\lambda}e^{-\lambda b -\lambda n}\lambda^{a+x_1+\cdots+x_n-1}\\</span>
+<span class="sd">          &amp;= -(b+n)e^{-\lambda(b+n)}\lambda^{a+x_1+\cdots+x_n-1}+e^{-\lambda b -\lambda n}(a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\</span>
+<span class="sd">        (b+n)e^{-\lambda(b+n)}\lambda^{a+x_1+\cdots+x_n-1} &amp;= e^{-\lambda b -\lambda n}(a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\</span>
+<span class="sd">        (b+n)\lambda^{a+x_1+\cdots+x_n-1} &amp;= (a+x_1+\cdots+x_n-1)\lambda^{a+x_1+\cdots+x_n-2}\\</span>
+<span class="sd">        (b+n)\lambda &amp;= a+x_1+\cdots+x_n-1\\</span>
+<span class="sd">        \lambda &amp;= \frac{a-1+\sum_i  x_i}{b+n}.</span>
+
+<span class="sd">    If we look at what happens as the prior parameters :math:`a, b \rightarrow 0`, we see that the mean of the posterior</span>
+<span class="sd">    approaches the MLE of the Poisson distribution.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_8"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_8">[docs]</a><span class="k">def</span> <span class="nf">question_8</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; MLE for the uniform distribution.</span>
+
+<span class="sd">    a) What is the MLE for data :math:`x_1,\ldots,x_n`?</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(a|x_1,\ldots,x_n) &amp;= \frac{\sum_i x_i}{(2a)^2}&amp;\\</span>
+<span class="sd">            &amp;= \frac{-\sum_i x_i}{8a},~&amp;\textrm{Der. with respect to}~a\\</span>
+<span class="sd">        0   &amp;= \frac{-\sum_i x_i}{8a},~&amp;\textrm{Set equal to 0 to find maximum}.</span>
+
+<span class="sd">    This is where some insight comes in. Solving for :math:`a` doesn&#39;t really work, but</span>
+<span class="sd">    if you think about plotting this function (for some fixed sum of data), you see that</span>
+<span class="sd">    it approaches 0 as :math:`a` increases. The MLE occurs when :math:`\hat{a} = max |x_i|, x_i \in {x_1,\ldots,x_n}`</span>
+<span class="sd">    since it captures all the data seen so far and there&#39;s no support for anything further out</span>
+<span class="sd">    in magnitude on the number line.</span>
+
+<span class="sd">    b) The probability the model would assign to point :math:`x_{n+1}` is:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(x_{n+1}|\hat{a}) &amp;= \frac{1}{2\hat{a}},\\</span>
+<span class="sd">            &amp;= \frac{1}{2x_{\textrm{max}}}.</span>
+
+<span class="sd">    c) This doesn&#39;t make a great deal of sense, especially if only a few data points have been observed.</span>
+
+<span class="sd">    It states that</span>
+<span class="sd">    the only points that will be observed will be no bigger than :math:`|x_{\textrm{max}}|`. In reality, the only thing</span>
+<span class="sd">    we know for sure is that :math:`a` is at least that large. We may instead set a prior on :math:`a` that takes into</span>
+<span class="sd">    account the range of feasible values based on the specific problem. It would have the effect of broadening the range</span>
+<span class="sd">    of values we expect to see, eventually tightening to all the points we&#39;ve seen so far.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="numbers_main"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.numbers_main">[docs]</a><span class="k">def</span> <span class="nf">numbers_main</span><span class="p">():</span>
+    <span class="n">game</span> <span class="o">=</span> <span class="n">NumberGame</span><span class="p">()</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">while</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">samples</span>
+            <span class="ow">or</span> <span class="nb">max</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">samples</span><span class="p">))</span> <span class="o">&lt;</span> <span class="mf">0.99</span>
+    <span class="p">):</span>
+        <span class="n">samples</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">game</span><span class="o">.</span><span class="n">sample_from_concept</span><span class="p">())</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Samples: </span><span class="si">{samples}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Posteriors: {game.posterior(samples)}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Plug-in Distribution: {game.plugin_distribution(samples)}&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;Posterior Predictive Distribution: {game.post_predictive_distribution(samples)}&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;MAP: </span><span class="si">{game.concepts[np.argmax(game.posterior(samples))].name}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">f</span><span class="s2">&quot;True concept: </span><span class="si">{game.active_concept}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="bb_main"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.bb_main">[docs]</a><span class="k">def</span> <span class="nf">bb_main</span><span class="p">():</span>
+    <span class="n">bb</span> <span class="o">=</span> <span class="n">BetaBinomial</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+    <span class="n">samples</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones</span><span class="p">(</span><span class="mi">11</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span><span class="o">+</span><span class="nb">list</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int</span><span class="p">))</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">bb</span><span class="o">.</span><span class="n">posterior</span><span class="p">(</span><span class="n">samples</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">prob</span><span class="o">.</span><span class="n">idxmax</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">prob</span><span class="o">.</span><span class="n">sum</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="mi">4</span><span class="o">/</span><span class="mi">22</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="mi">15</span><span class="o">/</span><span class="mi">29</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="c1">#bb_main()</span>
+    <span class="n">question_4</span><span class="p">()</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Steven Loscalzo.
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    <script type="text/javascript">
+        var DOCUMENTATION_OPTIONS = {
+            URL_ROOT:'../../',
+            VERSION:'0.0.1',
+            LANGUAGE:'None',
+            COLLAPSE_INDEX:false,
+            FILE_SUFFIX:'.html',
+            HAS_SOURCE:  true,
+            SOURCELINK_SUFFIX: '.txt'
+        };
+    </script>
+      <script type="text/javascript" src="../../_static/jquery.js"></script>
+      <script type="text/javascript" src="../../_static/underscore.js"></script>
+      <script type="text/javascript" src="../../_static/doctools.js"></script>
+      <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

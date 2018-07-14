@@ -1,4 +1,6 @@
 cached_data/
 ml/
 .idea*
+*__pycache__*
+*.swp
 
