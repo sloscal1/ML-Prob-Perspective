@@ -433,6 +433,62 @@ def question_8():
     return None
 
 
+def question_9():
+    r""" Bayesian analysis of the uniform dist.
+
+    Given a Pareto prior, the joint distribution of :math:`\theta` and :math:`\mathcal{D}` is
+    :math:`p(\mathcal{D}, \theta) = \frac{Kb^K}{\theta^{N+K+1}}\mathbb{I}(\theta \geq max(\mathcal{D},b))`. We're also
+    given :math:`p(\mathcal{D})`, and are asked to derive the posterior :math:`p(\theta|\mathcal{D})`. So...
+
+    .. math::
+        p(\theta|\mathcal{D}) &= \frac{p(\theta)p(\mathcal{D}|\theta)}{p(\mathcal{D})},~&\textrm{Bayes rule}\\
+            &= \frac{p(\theta)p(\mathcal{D},\theta)}{p(\theta)p(\mathcal{D})},~&\textrm{Def. of Cond Prob.}\\
+            &= \frac{p(\mathcal{D},\theta)}{p(\mathcal{D})}\\
+            &= \frac{Kb^K}{\theta^{N+K+1}}\cdot\frac{(N+K)m^{N+K}}{Kb^K},~&\textrm{If max is }\geq b,~\textrm{or}\\
+            &= \frac{(N+K)m^{N+K}}{\theta^{N+K+1}},\\
+            &= \frac{Kb^K}{\theta^{N+K+1}}\cdot\frac{(N+K)b^{N}}{K},~&\textrm{If max is }< b,\\
+            &= \frac{(N+K)b^{N+K}}{\theta^{N+K+1}},\\
+            &= Pareto(\theta|N+K, max(\mathcal{D},b)),~&\textrm{Def. of the Pareto distribution}.
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_10():
+    r""" Taxicab hijinks.
+
+    You go to a city and see a taxi numbered 100. Can we figure out how many taxis there are in this city?
+
+    a) Assuming we start with a :math:`Pareto(\theta,0,0)` distribution on the number, what's the posterior after
+    seeing that first taxicab numbered 100?
+
+    .. math::
+        p(\theta|\mathcal{D}) &= Pareto(\theta|N+K,max(0,100))\\
+            &= Pareto(\theta|1,100)
+
+    b) Compute the posterior mean, mode, and median:
+
+        i) mean = DNE, the rate parameter needs to be bigger.
+        ii) mode = 100, we've only seen 1 data point!
+        iii) median = 200...
+
+        .. math::
+            P(\theta \leq 0.5) &= \\
+            0.5 &= \int_m^x km^k\theta^{-(k+1)}d\theta\\
+                &= 100\int_{100}^x \theta^{-2}d\theta\\
+                &= 100\left[-\theta^{-1}\rvert_{100}^x\right]\\
+                &= \frac{100}{100} - \frac{100}{x}\\
+            0.5 &= \frac{100}{x}\\
+            x = 200.
+
+    c)
+
+    Returns:
+
+    """
+
+
 def numbers_main():
     game = NumberGame()
     samples = []

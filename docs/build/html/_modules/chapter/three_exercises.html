@@ -577,6 +577,62 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="question_9"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_9">[docs]</a><span class="k">def</span> <span class="nf">question_9</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Bayesian analysis of the uniform dist.</span>
+
+<span class="sd">    Given a Pareto prior, the joint distribution of :math:`\theta` and :math:`\mathcal{D}` is</span>
+<span class="sd">    :math:`p(\mathcal{D}, \theta) = \frac{Kb^K}{\theta^{N+K+1}}\mathbb{I}(\theta \geq max(\mathcal{D},b))`. We&#39;re also</span>
+<span class="sd">    given :math:`p(\mathcal{D})`, and are asked to derive the posterior :math:`p(\theta|\mathcal{D})`. So...</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(\theta|\mathcal{D}) &amp;= \frac{p(\theta)p(\mathcal{D}|\theta)}{p(\mathcal{D})},~&amp;\textrm{Bayes rule}\\</span>
+<span class="sd">            &amp;= \frac{p(\theta)p(\mathcal{D},\theta)}{p(\theta)p(\mathcal{D})},~&amp;\textrm{Def. of Cond Prob.}\\</span>
+<span class="sd">            &amp;= \frac{p(\mathcal{D},\theta)}{p(\mathcal{D})}\\</span>
+<span class="sd">            &amp;= \frac{Kb^K}{\theta^{N+K+1}}\cdot\frac{(N+K)m^{N+K}}{Kb^K},~&amp;\textrm{If max is }\geq b,~\textrm{or}\\</span>
+<span class="sd">            &amp;= \frac{(N+K)m^{N+K}}{\theta^{N+K+1}},\\</span>
+<span class="sd">            &amp;= \frac{Kb^K}{\theta^{N+K+1}}\cdot\frac{(N+K)b^{N}}{K},~&amp;\textrm{If max is }&lt; b,\\</span>
+<span class="sd">            &amp;= \frac{(N+K)b^{N+K}}{\theta^{N+K+1}},\\</span>
+<span class="sd">            &amp;= Pareto(\theta|N+K, max(\mathcal{D},b)),~&amp;\textrm{Def. of the Pareto distribution}.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_10"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_10">[docs]</a><span class="k">def</span> <span class="nf">question_10</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Taxicab hijinks.</span>
+
+<span class="sd">    You go to a city and see a taxi numbered 100. Can we figure out how many taxis there are in this city?</span>
+
+<span class="sd">    a) Assuming we start with a :math:`Pareto(\theta,0,0)` distribution on the number, what&#39;s the posterior after</span>
+<span class="sd">    seeing that first taxicab numbered 100?</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p(\theta|\mathcal{D}) &amp;= Pareto(\theta|N+K,max(0,100))\\</span>
+<span class="sd">            &amp;= Pareto(\theta|1,100)</span>
+
+<span class="sd">    b) Compute the posterior mean, mode, and median:</span>
+
+<span class="sd">        i) mean = DNE, the rate parameter needs to be bigger.</span>
+<span class="sd">        ii) mode = 100, we&#39;ve only seen 1 data point!</span>
+<span class="sd">        iii) median = 200...</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            P(\theta \leq 0.5) &amp;= \\</span>
+<span class="sd">            0.5 &amp;= \int_m^x km^k\theta^{-(k+1)}d\theta\\</span>
+<span class="sd">                &amp;= 100\int_{100}^x \theta^{-2}d\theta\\</span>
+<span class="sd">                &amp;= 100\left[-\theta^{-1}\rvert_{100}^x\right]\\</span>
+<span class="sd">                &amp;= \frac{100}{100} - \frac{100}{x}\\</span>
+<span class="sd">            0.5 &amp;= \frac{100}{x}\\</span>
+<span class="sd">            x = 200.</span>
+
+<span class="sd">    c)</span>
+
+<span class="sd">    Returns:</span>
+
+<span class="sd">    &quot;&quot;&quot;</span></div>
+
+
 <div class="viewcode-block" id="numbers_main"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.numbers_main">[docs]</a><span class="k">def</span> <span class="nf">numbers_main</span><span class="p">():</span>
     <span class="n">game</span> <span class="o">=</span> <span class="n">NumberGame</span><span class="p">()</span>
     <span class="n">samples</span> <span class="o">=</span> <span class="p">[]</span>
