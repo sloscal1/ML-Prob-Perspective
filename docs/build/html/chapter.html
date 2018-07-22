@@ -481,9 +481,127 @@ seeing that first taxicab numbered 100?</p>
 x = 200.\end{split}\]</div>
 </div></blockquote>
 </li>
-<li></li>
+<li><p class="first">Derive an expression for the posterior predictive after <span class="math notranslate nohighlight">\(\mathcal{D}=\{100\}\)</span>.</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}p(\mathcal{D'}|\mathcal{D},\alpha) &amp;= \int p(\mathcal{D'}|\theta)p(\theta|\mathcal{D},\alpha)d\theta\\
+   &amp;= \int_c^{\infty} Unif(x|\theta)Pareto(\theta|N+K,m)d\theta\\
+   &amp;= \int_c^{\infty}\theta^{-1}(N+K)m^{N+K}\theta^{-(N+K+1)}d\theta\\
+   &amp;= (N+K)m^{N+K}\int_c^{\infty}\theta^{-(N+K+2)}d\theta\\
+   &amp;= (N+K)m^{N+K}\left[\left.\frac{-1}{(N+K+1)\theta^{N+K+1}}\right|_c^{\infty}\right]\\
+   &amp;= \frac{m^{N+K}}{c^{N+K+1}}.\end{split}\]</div>
+<p>This is all predicated on <span class="math notranslate nohighlight">\(c = max(\mathcal{D'},m)\)</span>. We need to notice that the likelihood of a future
+point falling into the existing range doesn’t need to stretch the max, so any future value less than the current
+max will get equal probability of happening. If we want to predict the probability of a higher numbered taxi,
+then we need to start the integral from that point forward given the evidence we’ve collected so far, so that
+should be less likely than a uniform distribution up to that number (since we haven’t seen such a large value
+before). Using this formula, we can see that:</p>
+<ol class="lowerroman simple">
+<li><span class="math notranslate nohighlight">\(p(x=50|\mathcal{D},\alpha) = \frac{1}{100}\)</span></li>
+<li><span class="math notranslate nohighlight">\(p(x=100|\mathcal{D},\alpha) = \frac{1}{100}\)</span></li>
+<li><span class="math notranslate nohighlight">\(p(x=150|\mathcal{D},\alpha) = \frac{1}{225}\)</span></li>
 </ol>
-<p>Returns:</p>
+</div></blockquote>
+</li>
+</ol>
+<p>e) There aren’t an infinite number of taxis, so there should be a reasonable upper bound in the integral. The prior
+should also be set to a more reasonable value because the 150 case seems unusually low.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.three_exercises.question_11">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">question_11</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#question_11"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.question_11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bayesian analysis of the exponential distribution.</p>
+<ol class="loweralpha">
+<li><p class="first">Derive the MLE of <span class="math notranslate nohighlight">\(Expon(x|\theta)\)</span>.</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}p(x|\theta) &amp;= Expon(x|\theta)\\
+    &amp;= \theta e^{-x_1\theta}\cdots\theta e^{-x_n\theta}\\
+    &amp;= \theta^n e^{-\theta \sum_i x_i},~&amp;\textrm{Take the der. and set to 0}\\
+0   &amp;= n\theta^{n-1}e^{-\theta \sum_i x_i} - \theta^n \sum_i x_i e^{-\theta \sum_i x_i}\\
+\theta^n \sum_i x_i &amp;= n\theta^{n-1}\\
+\frac{\sum_i x_i}{n} &amp;= \frac{1}{\theta}\\
+\bar{x} &amp;= \frac{1}{\theta}\\
+\frac{1}{\bar{x}} &amp;= \theta.\end{split}\]</div>
+</div></blockquote>
+</li>
+<li><p class="first">Given 3 observations of <span class="math notranslate nohighlight">\(X, {5, 4, 6}\)</span>, what is the MLE of this data? <span class="math notranslate nohighlight">\(\theta = \frac{1}{5}\)</span>.</p>
+</li>
+</ol>
+<p>c) An expert thinks <span class="math notranslate nohighlight">\(p(\theta) = Expon(\theta|\lambda)\)</span>. Choose the prior <span class="math notranslate nohighlight">\(\hat{\lambda}\)</span> such that
+<span class="math notranslate nohighlight">\(\mathbb{E}[\theta] = 1/3\)</span>. We can do the MLE route again, to see that <span class="math notranslate nohighlight">\(\theta = \frac{1}{\lambda}\)</span> so
+we end up with <span class="math notranslate nohighlight">\(\hat{\lambda} = 3\)</span> to get the desired expected value of <span class="math notranslate nohighlight">\(\theta\)</span>.</p>
+<ol class="loweralpha" start="4">
+<li><p class="first">What is the posterior, <span class="math notranslate nohighlight">\(p(\theta|\mathcal{D},\hat{\lambda})\)</span>?</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}p(\theta|\mathcal{D},\hat{\lambda}) &amp;= p(\theta)p(\mathcal{D}|\theta\hat{\lambda})\\
+    &amp;\propto Expon(\theta|\hat{\lambda})Expon(x|\theta)\\
+    &amp;= \theta e^{-\theta\hat{\lambda}}\theta^{n}e^{-\theta\sum_i x_i}\\
+    &amp;= \theta^{n+1}e^{-\theta(\sum_i x_i + \hat{\lambda}}\\
+    &amp;= Gamma(\theta|n+2, \sum_i x_i + \hat{\lambda}).\end{split}\]</div>
+</div></blockquote>
+</li>
+</ol>
+<p>e) The exponential prior is not conjugate to the exponential likelihood. It results in a Gamma, but it turns out
+that the exponential we selected was just a special case of the Gamma distribution. In general, based on this
+analysis, I would say that we used a <span class="math notranslate nohighlight">\(Gamma(\theta|2,\hat{\lambda})\)</span> prior and not a <span class="math notranslate nohighlight">\(Expon(\theta|\hat{\lambda})\)</span>
+prior since the posterior distribution should be the same form as the prior if it was conjugate.</p>
+<ol class="loweralpha simple" start="6">
+<li>The posterior mean is <span class="math notranslate nohighlight">\(\frac{n+2}{\sum_i x_i + \hat{\lambda}}\)</span> based on the statistics of the Gamma dist.</li>
+</ol>
+<p>g) The MLE and the posterior mean differ because there wasn’t a prior involved in the MLE derivation. The prior
+suggests that the rate of failure is somewhat shorter than we have observed so far, and this additional information
+wasn’t available in just the likelihood alone. The posterior mean is probably more reasonable assuming the experts
+can give a reaonable prior estimate from their experience of studying other machines produced by a similar process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.three_exercises.question_12">
+<code class="descclassname">chapter.three_exercises.</code><code class="descname">question_12</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/three_exercises.html#question_12"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.three_exercises.question_12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bernoulli MAP estimate with non-conjugate priors.</p>
+<ol class="loweralpha">
+<li><p class="first">What if you used a prior: <span class="math notranslate nohighlight">\(p(\theta) = 0.5 if \theta = 0.5, 0.5 if \theta = 0.4, 0 otherwise\)</span>.</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}p(\theta|D) &amp;= p(\theta)p(D|\theta)\\
+    &amp;= p(\theta)\binom{N}{N_1}\theta^{N_1}(1-\theta)^{N-N_1}\\
+    &amp;= 0.5\binom{N}{N_1}0.5^{N_1}0.5^{N-N_1}+0.5\binom{N}{N_1}0.4^{N_1}0.6^{N-N_1}\\
+    &amp;= 0.5\binom{N}{N_1}\left[0.5^{N}+0.4^{N_1}0.6^{N-N_1}\right].\end{split}\]</div>
+</div></blockquote>
+</li>
+</ol>
+<p>b) What if the true parameter is <span class="math notranslate nohighlight">\(\theta = 0.41\)</span>. Which prior works better? For small <span class="math notranslate nohighlight">\(N\)</span>, we’ll likely
+find that the new prior is more accurate because it wants a <span class="math notranslate nohighlight">\(\theta\)</span> close to 0.45. Unfortunately, its
+effect never really diminishes with increasing trials and so the data doesn’t really overwhelm it. The Beta prior
+is more likely to have greater errors in the early stages (unless very specific parameters are selected), but
+instead of blending two specific values of <span class="math notranslate nohighlight">\(\theta\)</span> in fixed amounts, the blending is a part of the data
+collections and in the limit will converge to the true value.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="function">
@@ -946,9 +1064,57 @@ are functions of random variables these are permissible definitions of <span cla
          &amp;= \frac{p(z)p(y|z)p(x|y,z)}{p(z)},~&amp;\textrm{Chain rule of prob.}\\
          &amp;= p(y|z)p(x|z),~&amp;\textrm{By the above lemma, Def. Cond. Ind.}\\
          &amp;= g(x,z)h(y,z),~&amp;\textrm{Defined above.}\end{split}\]</div>
-<p>I don’t think I ever really proved that if you have two functions that you can combine
-them into the conditional probability statement desired.</p>
-<p>Returns:</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_9">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_9</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_9"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_9" title="Permalink to this definition">¶</a></dt>
+<dd><p>Conditional independence statements…</p>
+<ol class="loweralpha">
+<li><p class="first">Does <span class="math notranslate nohighlight">\((X \perp W|Z,Y) \wedge (X \perp Y|Z) \Rightarrow (X \perp Y,W|Z)\)</span>? Yes.</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}p(X,Y,W|Z) &amp;= \frac{p(X,Y,W,Z)}{p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\
+    &amp;= \frac{p(X,W|Z,Y)p(Z,Y)}{p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\
+    &amp;= \frac{p(X|Z,Y)p(W|Z,Y)p(Z,Y)}{p(Z)},~&amp;\textrm{First given; Def. Cond. Ind.}\\
+    &amp;= \frac{p(X,Z,Y)p(W|Z,Y)p(Z,Y)}{p(Z,Y)p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\
+    &amp;= \frac{p(X,Y|Z)p(Z)p(W|Z,Y)}{p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\
+    &amp;= p(X|Z)p(Y|Z)p(W|Z,Y),~&amp;\textrm{Second given; Def. Cond. Ind.}\\
+    &amp;= \frac{p(X|Z)p(Y|Z)p(W,Z,Y)}{p(Z,Y)},~&amp;\textrm{Def. Cond. Prob.}\\
+    &amp;= \frac{p(X|Z)p(Y|Z)p(Y,W|Z)p(Z)}{p(Z,Y)},~&amp;\textrm{Def. Cond. Prob.}\\
+    &amp;= \frac{p(X|Z)p(Y,Z)p(Y,W|Z)p(Z)}{p(Z,Y)p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\
+    &amp;= p(X|Z)p(Y,W|Z).\end{split}\]</div>
+</div></blockquote>
+</li>
+<li><p class="first">Does <span class="math notranslate nohighlight">\((X \perp Y|Z) \wedge (X \perp Y|W) \Rightarrow (X \perp Y|Z,W)?\)</span> No.</p>
+<blockquote>
+<div><p>If W and Z are describing the same event, then this is a true statement, but in general,
+it fails. If we construct another discrete example using a 4x4 grid where X is true along
+the bottom, Y is true along the right side, Z is true along the main diagonal and W is true
+in the bottom right corner, the top left corner, and along the minor diagonal in the middle two
+rows (not where Z is true), then we’ll have a contradiction. We get the first two statements as
+being true, <span class="math notranslate nohighlight">\((X \perp Y |Z) \wedge (X \perp Y|W)\)</span>, but we’ll find that <span class="math notranslate nohighlight">\(p(X|W,Z) = p(Y|W,Z) = 1/2\)</span>
+while <span class="math notranslate nohighlight">\(p(X,Y|W,Z) = 1/2\)</span> not 1/4, giving us a contradiction and allowing us to say that the
+result is not true.</p>
+</div></blockquote>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </div>

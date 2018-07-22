@@ -449,6 +449,7 @@ def question_9():
             &= \frac{Kb^K}{\theta^{N+K+1}}\cdot\frac{(N+K)b^{N}}{K},~&\textrm{If max is }< b,\\
             &= \frac{(N+K)b^{N+K}}{\theta^{N+K+1}},\\
             &= Pareto(\theta|N+K, max(\mathcal{D},b)),~&\textrm{Def. of the Pareto distribution}.
+
     Returns:
         None.
     """
@@ -482,11 +483,107 @@ def question_10():
             0.5 &= \frac{100}{x}\\
             x = 200.
 
-    c)
+    c) Derive an expression for the posterior predictive after :math:`\mathcal{D}=\{100\}`.
+
+        .. math::
+            p(\mathcal{D'}|\mathcal{D},\alpha) &= \int p(\mathcal{D'}|\theta)p(\theta|\mathcal{D},\alpha)d\theta\\
+               &= \int_c^{\infty} Unif(x|\theta)Pareto(\theta|N+K,m)d\theta\\
+               &= \int_c^{\infty}\theta^{-1}(N+K)m^{N+K}\theta^{-(N+K+1)}d\theta\\
+               &= (N+K)m^{N+K}\int_c^{\infty}\theta^{-(N+K+2)}d\theta\\
+               &= (N+K)m^{N+K}\left[\left.\frac{-1}{(N+K+1)\theta^{N+K+1}}\right|_c^{\infty}\right]\\
+               &= \frac{m^{N+K}}{c^{N+K+1}}.
+
+        This is all predicated on :math:`c = max(\mathcal{D'},m)`. We need to notice that the likelihood of a future
+        point falling into the existing range doesn't need to stretch the max, so any future value less than the current
+        max will get equal probability of happening. If we want to predict the probability of a higher numbered taxi,
+        then we need to start the integral from that point forward given the evidence we've collected so far, so that
+        should be less likely than a uniform distribution up to that number (since we haven't seen such a large value
+        before). Using this formula, we can see that:
+
+        i) :math:`p(x=50|\mathcal{D},\alpha) = \frac{1}{100}`
+        ii) :math:`p(x=100|\mathcal{D},\alpha) = \frac{1}{100}`
+        iii) :math:`p(x=150|\mathcal{D},\alpha) = \frac{1}{225}`
+
+    e) There aren't an infinite number of taxis, so there should be a reasonable upper bound in the integral. The prior
+    should also be set to a more reasonable value because the 150 case seems unusually low.
 
     Returns:
-
+        None.
     """
+    return None
+
+
+def question_11():
+    r""" Bayesian analysis of the exponential distribution.
+
+    a) Derive the MLE of :math:`Expon(x|\theta)`.
+
+        .. math::
+            p(x|\theta) &= Expon(x|\theta)\\
+                &= \theta e^{-x_1\theta}\cdots\theta e^{-x_n\theta}\\
+                &= \theta^n e^{-\theta \sum_i x_i},~&\textrm{Take the der. and set to 0}\\
+            0   &= n\theta^{n-1}e^{-\theta \sum_i x_i} - \theta^n \sum_i x_i e^{-\theta \sum_i x_i}\\
+            \theta^n \sum_i x_i &= n\theta^{n-1}\\
+            \frac{\sum_i x_i}{n} &= \frac{1}{\theta}\\
+            \bar{x} &= \frac{1}{\theta}\\
+            \frac{1}{\bar{x}} &= \theta.
+
+    b) Given 3 observations of :math:`X, {5, 4, 6}`, what is the MLE of this data? :math:`\theta = \frac{1}{5}`.
+
+    c) An expert thinks :math:`p(\theta) = Expon(\theta|\lambda)`. Choose the prior :math:`\hat{\lambda}` such that
+    :math:`\mathbb{E}[\theta] = 1/3`. We can do the MLE route again, to see that :math:`\theta = \frac{1}{\lambda}` so
+    we end up with :math:`\hat{\lambda} = 3` to get the desired expected value of :math:`\theta`.
+
+    d) What is the posterior, :math:`p(\theta|\mathcal{D},\hat{\lambda})`?
+
+        .. math::
+            p(\theta|\mathcal{D},\hat{\lambda}) &= p(\theta)p(\mathcal{D}|\theta\hat{\lambda})\\
+                &\propto Expon(\theta|\hat{\lambda})Expon(x|\theta)\\
+                &= \theta e^{-\theta\hat{\lambda}}\theta^{n}e^{-\theta\sum_i x_i}\\
+                &= \theta^{n+1}e^{-\theta(\sum_i x_i + \hat{\lambda}}\\
+                &= Gamma(\theta|n+2, \sum_i x_i + \hat{\lambda}).
+
+    e) The exponential prior is not conjugate to the exponential likelihood. It results in a Gamma, but it turns out
+    that the exponential we selected was just a special case of the Gamma distribution. In general, based on this
+    analysis, I would say that we used a :math:`Gamma(\theta|2,\hat{\lambda})` prior and not a :math:`Expon(\theta|\hat{\lambda})`
+    prior since the posterior distribution should be the same form as the prior if it was conjugate.
+
+    f) The posterior mean is :math:`\frac{n+2}{\sum_i x_i + \hat{\lambda}}` based on the statistics of the Gamma dist.
+
+    g) The MLE and the posterior mean differ because there wasn't a prior involved in the MLE derivation. The prior
+    suggests that the rate of failure is somewhat shorter than we have observed so far, and this additional information
+    wasn't available in just the likelihood alone. The posterior mean is probably more reasonable assuming the experts
+    can give a reaonable prior estimate from their experience of studying other machines produced by a similar process.
+
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_12():
+    r""" Bernoulli MAP estimate with non-conjugate priors.
+
+    a) What if you used a prior: :math:`p(\theta) = 0.5 if \theta = 0.5, 0.5 if \theta = 0.4, 0 otherwise`.
+
+        .. math::
+            p(\theta|D) &= p(\theta)p(D|\theta)\\
+                &= p(\theta)\binom{N}{N_1}\theta^{N_1}(1-\theta)^{N-N_1}\\
+                &= 0.5\binom{N}{N_1}0.5^{N_1}0.5^{N-N_1}+0.5\binom{N}{N_1}0.4^{N_1}0.6^{N-N_1}\\
+                &= 0.5\binom{N}{N_1}\left[0.5^{N}+0.4^{N_1}0.6^{N-N_1}\right].
+
+    b) What if the true parameter is :math:`\theta = 0.41`. Which prior works better? For small :math:`N`, we'll likely
+    find that the new prior is more accurate because it wants a :math:`\theta` close to 0.45. Unfortunately, its
+    effect never really diminishes with increasing trials and so the data doesn't really overwhelm it. The Beta prior
+    is more likely to have greater errors in the early stages (unless very specific parameters are selected), but
+    instead of blending two specific values of :math:`\theta` in fixed amounts, the blending is a part of the data
+    collections and in the limit will converge to the true value.
+
+    Returns:
+        None.
+    """
+    return None
 
 
 def numbers_main():

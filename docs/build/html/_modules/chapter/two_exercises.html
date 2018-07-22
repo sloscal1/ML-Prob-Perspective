@@ -414,14 +414,44 @@
 <span class="sd">                 &amp;= p(y|z)p(x|z),~&amp;\textrm{By the above lemma, Def. Cond. Ind.}\\</span>
 <span class="sd">                 &amp;= g(x,z)h(y,z),~&amp;\textrm{Defined above.}</span>
 
-<span class="sd">    I don&#39;t think I ever really proved that if you have two functions that you can combine</span>
-<span class="sd">    them into the conditional probability statement desired.</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="question_9"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_9">[docs]</a><span class="k">def</span> <span class="nf">question_9</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Conditional independence statements...</span>
+
+<span class="sd">    a) Does :math:`(X \perp W|Z,Y) \wedge (X \perp Y|Z) \Rightarrow (X \perp Y,W|Z)`? Yes.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            p(X,Y,W|Z) &amp;= \frac{p(X,Y,W,Z)}{p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\</span>
+<span class="sd">                &amp;= \frac{p(X,W|Z,Y)p(Z,Y)}{p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\</span>
+<span class="sd">                &amp;= \frac{p(X|Z,Y)p(W|Z,Y)p(Z,Y)}{p(Z)},~&amp;\textrm{First given; Def. Cond. Ind.}\\</span>
+<span class="sd">                &amp;= \frac{p(X,Z,Y)p(W|Z,Y)p(Z,Y)}{p(Z,Y)p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\</span>
+<span class="sd">                &amp;= \frac{p(X,Y|Z)p(Z)p(W|Z,Y)}{p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\</span>
+<span class="sd">                &amp;= p(X|Z)p(Y|Z)p(W|Z,Y),~&amp;\textrm{Second given; Def. Cond. Ind.}\\</span>
+<span class="sd">                &amp;= \frac{p(X|Z)p(Y|Z)p(W,Z,Y)}{p(Z,Y)},~&amp;\textrm{Def. Cond. Prob.}\\</span>
+<span class="sd">                &amp;= \frac{p(X|Z)p(Y|Z)p(Y,W|Z)p(Z)}{p(Z,Y)},~&amp;\textrm{Def. Cond. Prob.}\\</span>
+<span class="sd">                &amp;= \frac{p(X|Z)p(Y,Z)p(Y,W|Z)p(Z)}{p(Z,Y)p(Z)},~&amp;\textrm{Def. Cond. Prob.}\\</span>
+<span class="sd">                &amp;= p(X|Z)p(Y,W|Z).</span>
+
+<span class="sd">    b) Does :math:`(X \perp Y|Z) \wedge (X \perp Y|W) \Rightarrow (X \perp Y|Z,W)?` No.</span>
+
+<span class="sd">        If W and Z are describing the same event, then this is a true statement, but in general,</span>
+<span class="sd">        it fails. If we construct another discrete example using a 4x4 grid where X is true along</span>
+<span class="sd">        the bottom, Y is true along the right side, Z is true along the main diagonal and W is true</span>
+<span class="sd">        in the bottom right corner, the top left corner, and along the minor diagonal in the middle two</span>
+<span class="sd">        rows (not where Z is true), then we&#39;ll have a contradiction. We get the first two statements as</span>
+<span class="sd">        being true, :math:`(X \perp Y |Z) \wedge (X \perp Y|W)`, but we&#39;ll find that :math:`p(X|W,Z) = p(Y|W,Z) = 1/2`</span>
+<span class="sd">        while :math:`p(X,Y|W,Z) = 1/2` not 1/4, giving us a contradiction and allowing us to say that the</span>
+<span class="sd">        result is not true.</span>
 
 <span class="sd">    Returns:</span>
-
-<span class="sd">    &quot;&quot;&quot;</span></div>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>

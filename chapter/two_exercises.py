@@ -270,14 +270,44 @@ def question_8():
                  &= p(y|z)p(x|z),~&\textrm{By the above lemma, Def. Cond. Ind.}\\
                  &= g(x,z)h(y,z),~&\textrm{Defined above.}
 
-    I don't think I ever really proved that if you have two functions that you can combine
-    them into the conditional probability statement desired.
+    Returns:
+        None.
+    """
+    return None
 
 
+def question_9():
+    r""" Conditional independence statements...
+
+    a) Does :math:`(X \perp W|Z,Y) \wedge (X \perp Y|Z) \Rightarrow (X \perp Y,W|Z)`? Yes.
+
+        .. math::
+            p(X,Y,W|Z) &= \frac{p(X,Y,W,Z)}{p(Z)},~&\textrm{Def. Cond. Prob.}\\
+                &= \frac{p(X,W|Z,Y)p(Z,Y)}{p(Z)},~&\textrm{Def. Cond. Prob.}\\
+                &= \frac{p(X|Z,Y)p(W|Z,Y)p(Z,Y)}{p(Z)},~&\textrm{First given; Def. Cond. Ind.}\\
+                &= \frac{p(X,Z,Y)p(W|Z,Y)p(Z,Y)}{p(Z,Y)p(Z)},~&\textrm{Def. Cond. Prob.}\\
+                &= \frac{p(X,Y|Z)p(Z)p(W|Z,Y)}{p(Z)},~&\textrm{Def. Cond. Prob.}\\
+                &= p(X|Z)p(Y|Z)p(W|Z,Y),~&\textrm{Second given; Def. Cond. Ind.}\\
+                &= \frac{p(X|Z)p(Y|Z)p(W,Z,Y)}{p(Z,Y)},~&\textrm{Def. Cond. Prob.}\\
+                &= \frac{p(X|Z)p(Y|Z)p(Y,W|Z)p(Z)}{p(Z,Y)},~&\textrm{Def. Cond. Prob.}\\
+                &= \frac{p(X|Z)p(Y,Z)p(Y,W|Z)p(Z)}{p(Z,Y)p(Z)},~&\textrm{Def. Cond. Prob.}\\
+                &= p(X|Z)p(Y,W|Z).
+
+    b) Does :math:`(X \perp Y|Z) \wedge (X \perp Y|W) \Rightarrow (X \perp Y|Z,W)?` No.
+
+        If W and Z are describing the same event, then this is a true statement, but in general,
+        it fails. If we construct another discrete example using a 4x4 grid where X is true along
+        the bottom, Y is true along the right side, Z is true along the main diagonal and W is true
+        in the bottom right corner, the top left corner, and along the minor diagonal in the middle two
+        rows (not where Z is true), then we'll have a contradiction. We get the first two statements as
+        being true, :math:`(X \perp Y |Z) \wedge (X \perp Y|W)`, but we'll find that :math:`p(X|W,Z) = p(Y|W,Z) = 1/2`
+        while :math:`p(X,Y|W,Z) = 1/2` not 1/4, giving us a contradiction and allowing us to say that the
+        result is not true.
 
     Returns:
-
+        None.
     """
+    return None
 
 
 if __name__ == "__main__":

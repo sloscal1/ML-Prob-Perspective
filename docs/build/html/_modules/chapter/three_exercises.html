@@ -593,6 +593,7 @@
 <span class="sd">            &amp;= \frac{Kb^K}{\theta^{N+K+1}}\cdot\frac{(N+K)b^{N}}{K},~&amp;\textrm{If max is }&lt; b,\\</span>
 <span class="sd">            &amp;= \frac{(N+K)b^{N+K}}{\theta^{N+K+1}},\\</span>
 <span class="sd">            &amp;= Pareto(\theta|N+K, max(\mathcal{D},b)),~&amp;\textrm{Def. of the Pareto distribution}.</span>
+
 <span class="sd">    Returns:</span>
 <span class="sd">        None.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -626,11 +627,107 @@
 <span class="sd">            0.5 &amp;= \frac{100}{x}\\</span>
 <span class="sd">            x = 200.</span>
 
-<span class="sd">    c)</span>
+<span class="sd">    c) Derive an expression for the posterior predictive after :math:`\mathcal{D}=\{100\}`.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            p(\mathcal{D&#39;}|\mathcal{D},\alpha) &amp;= \int p(\mathcal{D&#39;}|\theta)p(\theta|\mathcal{D},\alpha)d\theta\\</span>
+<span class="sd">               &amp;= \int_c^{\infty} Unif(x|\theta)Pareto(\theta|N+K,m)d\theta\\</span>
+<span class="sd">               &amp;= \int_c^{\infty}\theta^{-1}(N+K)m^{N+K}\theta^{-(N+K+1)}d\theta\\</span>
+<span class="sd">               &amp;= (N+K)m^{N+K}\int_c^{\infty}\theta^{-(N+K+2)}d\theta\\</span>
+<span class="sd">               &amp;= (N+K)m^{N+K}\left[\left.\frac{-1}{(N+K+1)\theta^{N+K+1}}\right|_c^{\infty}\right]\\</span>
+<span class="sd">               &amp;= \frac{m^{N+K}}{c^{N+K+1}}.</span>
+
+<span class="sd">        This is all predicated on :math:`c = max(\mathcal{D&#39;},m)`. We need to notice that the likelihood of a future</span>
+<span class="sd">        point falling into the existing range doesn&#39;t need to stretch the max, so any future value less than the current</span>
+<span class="sd">        max will get equal probability of happening. If we want to predict the probability of a higher numbered taxi,</span>
+<span class="sd">        then we need to start the integral from that point forward given the evidence we&#39;ve collected so far, so that</span>
+<span class="sd">        should be less likely than a uniform distribution up to that number (since we haven&#39;t seen such a large value</span>
+<span class="sd">        before). Using this formula, we can see that:</span>
+
+<span class="sd">        i) :math:`p(x=50|\mathcal{D},\alpha) = \frac{1}{100}`</span>
+<span class="sd">        ii) :math:`p(x=100|\mathcal{D},\alpha) = \frac{1}{100}`</span>
+<span class="sd">        iii) :math:`p(x=150|\mathcal{D},\alpha) = \frac{1}{225}`</span>
+
+<span class="sd">    e) There aren&#39;t an infinite number of taxis, so there should be a reasonable upper bound in the integral. The prior</span>
+<span class="sd">    should also be set to a more reasonable value because the 150 case seems unusually low.</span>
 
 <span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
-<span class="sd">    &quot;&quot;&quot;</span></div>
+
+<div class="viewcode-block" id="question_11"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_11">[docs]</a><span class="k">def</span> <span class="nf">question_11</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Bayesian analysis of the exponential distribution.</span>
+
+<span class="sd">    a) Derive the MLE of :math:`Expon(x|\theta)`.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            p(x|\theta) &amp;= Expon(x|\theta)\\</span>
+<span class="sd">                &amp;= \theta e^{-x_1\theta}\cdots\theta e^{-x_n\theta}\\</span>
+<span class="sd">                &amp;= \theta^n e^{-\theta \sum_i x_i},~&amp;\textrm{Take the der. and set to 0}\\</span>
+<span class="sd">            0   &amp;= n\theta^{n-1}e^{-\theta \sum_i x_i} - \theta^n \sum_i x_i e^{-\theta \sum_i x_i}\\</span>
+<span class="sd">            \theta^n \sum_i x_i &amp;= n\theta^{n-1}\\</span>
+<span class="sd">            \frac{\sum_i x_i}{n} &amp;= \frac{1}{\theta}\\</span>
+<span class="sd">            \bar{x} &amp;= \frac{1}{\theta}\\</span>
+<span class="sd">            \frac{1}{\bar{x}} &amp;= \theta.</span>
+
+<span class="sd">    b) Given 3 observations of :math:`X, {5, 4, 6}`, what is the MLE of this data? :math:`\theta = \frac{1}{5}`.</span>
+
+<span class="sd">    c) An expert thinks :math:`p(\theta) = Expon(\theta|\lambda)`. Choose the prior :math:`\hat{\lambda}` such that</span>
+<span class="sd">    :math:`\mathbb{E}[\theta] = 1/3`. We can do the MLE route again, to see that :math:`\theta = \frac{1}{\lambda}` so</span>
+<span class="sd">    we end up with :math:`\hat{\lambda} = 3` to get the desired expected value of :math:`\theta`.</span>
+
+<span class="sd">    d) What is the posterior, :math:`p(\theta|\mathcal{D},\hat{\lambda})`?</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            p(\theta|\mathcal{D},\hat{\lambda}) &amp;= p(\theta)p(\mathcal{D}|\theta\hat{\lambda})\\</span>
+<span class="sd">                &amp;\propto Expon(\theta|\hat{\lambda})Expon(x|\theta)\\</span>
+<span class="sd">                &amp;= \theta e^{-\theta\hat{\lambda}}\theta^{n}e^{-\theta\sum_i x_i}\\</span>
+<span class="sd">                &amp;= \theta^{n+1}e^{-\theta(\sum_i x_i + \hat{\lambda}}\\</span>
+<span class="sd">                &amp;= Gamma(\theta|n+2, \sum_i x_i + \hat{\lambda}).</span>
+
+<span class="sd">    e) The exponential prior is not conjugate to the exponential likelihood. It results in a Gamma, but it turns out</span>
+<span class="sd">    that the exponential we selected was just a special case of the Gamma distribution. In general, based on this</span>
+<span class="sd">    analysis, I would say that we used a :math:`Gamma(\theta|2,\hat{\lambda})` prior and not a :math:`Expon(\theta|\hat{\lambda})`</span>
+<span class="sd">    prior since the posterior distribution should be the same form as the prior if it was conjugate.</span>
+
+<span class="sd">    f) The posterior mean is :math:`\frac{n+2}{\sum_i x_i + \hat{\lambda}}` based on the statistics of the Gamma dist.</span>
+
+<span class="sd">    g) The MLE and the posterior mean differ because there wasn&#39;t a prior involved in the MLE derivation. The prior</span>
+<span class="sd">    suggests that the rate of failure is somewhat shorter than we have observed so far, and this additional information</span>
+<span class="sd">    wasn&#39;t available in just the likelihood alone. The posterior mean is probably more reasonable assuming the experts</span>
+<span class="sd">    can give a reaonable prior estimate from their experience of studying other machines produced by a similar process.</span>
+
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_12"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.question_12">[docs]</a><span class="k">def</span> <span class="nf">question_12</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Bernoulli MAP estimate with non-conjugate priors.</span>
+
+<span class="sd">    a) What if you used a prior: :math:`p(\theta) = 0.5 if \theta = 0.5, 0.5 if \theta = 0.4, 0 otherwise`.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            p(\theta|D) &amp;= p(\theta)p(D|\theta)\\</span>
+<span class="sd">                &amp;= p(\theta)\binom{N}{N_1}\theta^{N_1}(1-\theta)^{N-N_1}\\</span>
+<span class="sd">                &amp;= 0.5\binom{N}{N_1}0.5^{N_1}0.5^{N-N_1}+0.5\binom{N}{N_1}0.4^{N_1}0.6^{N-N_1}\\</span>
+<span class="sd">                &amp;= 0.5\binom{N}{N_1}\left[0.5^{N}+0.4^{N_1}0.6^{N-N_1}\right].</span>
+
+<span class="sd">    b) What if the true parameter is :math:`\theta = 0.41`. Which prior works better? For small :math:`N`, we&#39;ll likely</span>
+<span class="sd">    find that the new prior is more accurate because it wants a :math:`\theta` close to 0.45. Unfortunately, its</span>
+<span class="sd">    effect never really diminishes with increasing trials and so the data doesn&#39;t really overwhelm it. The Beta prior</span>
+<span class="sd">    is more likely to have greater errors in the early stages (unless very specific parameters are selected), but</span>
+<span class="sd">    instead of blending two specific values of :math:`\theta` in fixed amounts, the blending is a part of the data</span>
+<span class="sd">    collections and in the limit will converge to the true value.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
 
 
 <div class="viewcode-block" id="numbers_main"><a class="viewcode-back" href="../../chapter.html#chapter.three_exercises.numbers_main">[docs]</a><span class="k">def</span> <span class="nf">numbers_main</span><span class="p">():</span>
