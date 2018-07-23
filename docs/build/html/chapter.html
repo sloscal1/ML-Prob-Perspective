@@ -852,6 +852,243 @@ of one child being a girl.</p>
 </dd></dl>
 
 <dl class="function">
+<dt id="chapter.two_exercises.question_10">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_10</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_10"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_10" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derive the inverse gamma distribution.</p>
+<p>If <span class="math notranslate nohighlight">\(X \sim Ga(a, b)\)</span>, and <span class="math notranslate nohighlight">\(Y = 1/X\)</span>, show that <span class="math notranslate nohighlight">\(Y \sim IG(a, b)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p_y(y) &amp;= p_x(x)\left|\frac{dy}{dx}\frac{1}{X}\right|\\
+    &amp;= \frac{b^a}{\Gamma(a)}\left(\frac{1}{x}\right)^{a-1}e^{-b/x}x^{-2}\\
+    &amp;= \frac{b^a}{\Gamma(a)}x^{-(a-1)}e^{-b/x}x^{-2}\\
+    &amp;= \frac{b^a}{\Gamma(a)}x^{-(a+1)}e^{-b/x}\\
+    &amp;= IG(a, b).\end{split}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_11">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_11</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_11"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_11" title="Permalink to this definition">¶</a></dt>
+<dd><p>Derive the 1D Gaussian normalization constant.</p>
+<p>We’re going to need to do a little u-substitution:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}u &amp;= \frac{r^2}{2\sigma^2}\\
+du &amp;= \frac{2r}{2\sigma^2}dr\\
+\frac{\sigma^2}{r}du &amp;= dr.\end{split}\]</div>
+<div class="math notranslate nohighlight">
+\[\begin{split}Z^2 &amp;= \int_0^{2\pi}\int_0^{\infty}r exp\left(\frac{-r^2}{2\sigma^2}\right) dr d\theta\\
+    &amp;= \int_0^{2\pi}\int_0^{\infty}r exp\left(\frac{-r^2}{2\sigma^2}\right) dr d\theta\\
+    &amp;= \int_0^{2\pi}\int_0^{\infty}re^{-u} du\frac{\sigma^2}{r}d\theta\\
+    &amp;= \sigma^2\int_0^{2\pi}\int_0^{\infty}e^{-u} du d\theta\\
+    &amp;= \sigma^2\int_0^{2\pi} \left.-e^{-u}\right|_0^{\infty} d\theta\\
+    &amp;= \sigma^2\int_0^{2\pi} 1 d\theta\\
+    &amp;= \sigma^2\left.\theta\right|_0^{2\pi}\\
+    &amp;= \sigma^2 2\pi\\
+Z &amp;= \sqrt{\sigma^2 2\pi}\\\end{split}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_12">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_12</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_12"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_12" title="Permalink to this definition">¶</a></dt>
+<dd><p>Express I(X,Y) as entropy…</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I(X,Y) &amp;= \Sigma_x\Sigma_y p(x,y) \log\frac{p(x,y)}{p(x)p(y)}\\
+    &amp;= \Sigma_x\Sigma_y p(x|y)p(y) \log\frac{p(x|y)p(y)}{p(x)p(y)}\\
+    &amp;= \Sigma_x\Sigma_y p(x|y)p(y) \left[\log p(x|y) - \log p(x)\right]\\
+    &amp;= \Sigma_x\Sigma_y p(x|y)p(y)\log p(x|y) - \Sigma_x\Sigma_y p(x|y)p(y)\log p(x)\\
+    &amp;= \Sigma_y p(y) \Sigma_x p(x|y)\log p(x|y) - \Sigma_x \log p(x) \Sigma_y p(x|y)p(y)\\
+    &amp;= -H(X|Y) - \Sigma_x \log p(x) \Sigma_y p(x|y)p(y),~&amp;\textrm{Def. of Cond. Entropy}\\
+    &amp;= -H(X|Y) - \Sigma_x p(x)\log p(x),~&amp;\textrm{Law of Total Prob.}\\
+    &amp;= -H(X|Y) + H(X),~&amp;\textrm{Def. of Cond. Entropy}\\
+    &amp;= H(X) - H(X|Y).\end{split}\]</div>
+<p>You could simply change the way you go from joint to conditional variables in first step of the proof.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_13">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_13</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_13"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_13" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_14">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_14</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_14"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_14" title="Permalink to this definition">¶</a></dt>
+<dd><p>Show that normalized mutual information is a type of correlation.</p>
+<p><span class="math notranslate nohighlight">\(r = 1-\frac{H(Y|X)}{H(X)}\)</span>.</p>
+<ol class="loweralpha">
+<li><p class="first">Show <span class="math notranslate nohighlight">\(r = \frac{I(X,Y)}{H(X)}\)</span>:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}r &amp;= 1 - \frac{H(Y|X)}{H(X)}\\
+    &amp;= \frac{H(X)}{H(X)} - \frac{H(Y|X)}{H(X)}\\
+    &amp;= \frac{H(Y) - H(Y|X)}{H(X)},~&amp;\textrm{X and Y are identically distributed.}\\
+    &amp;= \frac{I(X,Y)}{H(X)},~&amp;\textrm{From Q2.12}.\end{split}\]</div>
+</div></blockquote>
+</li>
+</ol>
+<p>b) Show <span class="math notranslate nohighlight">\(0 \leq r \leq 1\)</span>. We need to minimize and maximize the numerator. It is minimized when
+the <span class="math notranslate nohighlight">\(log\frac{p(x,y)}{p(x)p(y)}\)</span> is minimized, so:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}0 &amp;= \log\frac{p(x,y)}{p(x)p(y)}\\
+\log(p(x)p(y)) &amp;= \log p(x,y)\\
+\log(p(x)p(y)) &amp;= \log(p(x)p(y)),~&amp;X \perp Y.\end{split}\]</div>
+<p>If this term is 0 (and it can be if <span class="math notranslate nohighlight">\(X \perp Y\)</span>), then the numerator is 0 and <span class="math notranslate nohighlight">\(r=0\)</span>. The
+numerator is maximized when <span class="math notranslate nohighlight">\(X=Y\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}I(X,X) &amp;= \Sigma_x \Sigma_y p(x,x) \log\frac{p(x,x)}{p(x)p(x)}\\
+    &amp;= \Sigma_x \Sigma_y p(x) \log\frac{1}{p(x)}\\
+    &amp;= \Sigma_x p(x) \log\frac{1}{p(x)}\\
+    &amp;= \Sigma_x p(x) \log 1 - \Sigma_x p(x) \log p(x)\\
+    &amp;= 0 + H(X)\\.\end{split}\]</div>
+<p>So we end up with <span class="math notranslate nohighlight">\(\frac{H(X)}{H(X)} = 1\)</span>. So we’ve seen the min and max and we have shown that
+<span class="math notranslate nohighlight">\(0 \leq r \leq 1\)</span>.</p>
+</div></blockquote>
+<ol class="loweralpha simple" start="3">
+<li><span class="math notranslate nohighlight">\(r = 0\)</span> when <span class="math notranslate nohighlight">\(X \perp Y\)</span>.</li>
+<li><span class="math notranslate nohighlight">\(r = 1\)</span> when <span class="math notranslate nohighlight">\(X = Y\)</span>.</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_16">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_16</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_16"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_16" title="Permalink to this definition">¶</a></dt>
+<dd><p>Mean, median, and mode of the Beta distribution.</p>
+<ol class="loweralpha">
+<li><p class="first">Mean:</p>
+<blockquote>
+<div><div class="math notranslate nohighlight">
+\[\begin{split}\mathbb{E}[X] &amp;= \int_0^1 x B(a,b)dx\\
+    &amp;= \int_0^1 x\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1}dx\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1 x^a(1-x)^{b-1}dx\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1 x^{(a+1)-1}-x^{a+b-1}dx\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}B(a+1,b),~&amp;\textrm{Integral form of Beta}\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\frac{\Gamma(a+1)\Gamma(b)}{\Gamma(a+b+1)},~&amp;\textrm{Def. of Beta}\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)}\frac{a\Gamma(a)}{(a+b)\Gamma(a+b)},~&amp;\textrm{Def. of }\Gamma,\\
+    &amp;= \frac{a}{(a+b)}.\end{split}\]</div>
+</div></blockquote>
+</li>
+<li><dl class="first docutils">
+<dt>Mode:</dt>
+<dd><p class="first">We’re going to take the derivative, set to 0, and solve to see what we get…</p>
+<div class="last math notranslate nohighlight">
+\[\begin{split}B(a, b) &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1}dx\\
+0 &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[(a-1)x^{a-2}(1-x)^{b-1}-x^{a-1}(b-1)(1-x)^{b-2}\right]\\
+0 &amp;= (a-1)(1-x)-x(b-1)\\
+0 &amp;= a-x-1-ax-xb+x\\
+ax+bx-2x &amp;= a-1\\
+x &amp;= \frac{a-1}{a+b-2}.\end{split}\]</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Variance:</dt>
+<dd><p class="first">Just going to use the standard formula and hope for the best!</p>
+<div class="last math notranslate nohighlight">
+\[\begin{split}Var(B(a,b)) &amp;= \int_0^1\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left(x-\frac{a}{a+b}\right)^2 x^{a-1}(1-x)^{b-1}dx\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1\left(x^2-\frac{2xa}{a+b}+\frac{a^2}{(a+b)^2}\right) x^{a-1}(1-x)^{b-1}dx\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[\int_0^1 x^{(a+2)-1}(1-x)^{b-1}dx -\frac{2a}{a+b}\int_0^1 x^{(a+1)-1}(1-x)^{b-1}dx+\frac{a^2}{(a+b)^2}\int_0^1 x^{a-1}(1-x)^{b-1}dx\right]\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[B(a+2,b) -\frac{2a}{a+b}B(a+1,b)+\frac{a^2}{(a+b)^2}B(a,b)\right]\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[\frac{\Gamma(a+2)\Gamma(b)}{\Gamma(a+b+2)} -\frac{2a}{a+b}\frac{\Gamma(a+1)\Gamma(b)}{\Gamma(a+b+1)}+\frac{a^2}{(a+b)^2}\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}\right]\\
+    &amp;= \frac{\Gamma(a+b)}{\Gamma(a)}\left[\frac{(a+1)a\Gamma(a)}{(a+b+1)(a+b)\Gamma(a+b)} -\frac{2a}{a+b}\frac{a\Gamma(a)}{(a+b)\Gamma(a+b)}+\frac{a^2}{(a+b)^2}\frac{\Gamma(a)}{\Gamma(a+b)}\right]\\
+    &amp;= \frac{(a+1)a}{(a+b+1)(a+b)} -\frac{2a}{a+b}\frac{a}{(a+b)}+\frac{a^2}{(a+b)^2}\\
+    &amp;= \frac{a^2+a}{(a+b+1)(a+b)} -\frac{2a^2}{(a+b)^2}+\frac{a^2}{(a+b)^2}\\
+    &amp;= \frac{(a^2+a)(a+b) - (2a^2)(a+b+1) + a^2(a+b+1)}{(a+b+1)(a+b)^2}\\
+    &amp;= \frac{a^3+a^2b+a^2+ab - 2a^3-2a^2b-2a^2 + a^3+a^2b+a^2}{(a+b+1)(a+b)^2}\\
+    &amp;= \frac{ab}{(a+b+1)(a+b)^2}.\end{split}\]</div>
+</dd>
+</dl>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.two_exercises.question_17">
+<code class="descclassname">chapter.two_exercises.</code><code class="descname">question_17</code><span class="sig-paren">(</span><em>k=2</em>, <em>trials=1000</em>, <em>seed=1337</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_17"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_17" title="Permalink to this definition">¶</a></dt>
+<dd><p>Expected value of the minimum of 2 uniformly distributed numbers…</p>
+<p>The trick here is figuring out how to express the max function over two variables…
+Assuming <span class="math notranslate nohighlight">\(x_1,x_2 \sim Unif(0,1)\)</span>.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbb{E}[min(x_1,x_2)] &amp;= \int_0^1\int_0^1 x_2\mathbb{I}(x_2 \leq x_1) + x_1\mathbb{I}(x_1 &lt; x_2)dx_2 dx_1\\
+    &amp;= \int_0^1\int_0^1 x_2\mathbb{I}(x_2 \leq x_1) dx_2 dx_1 + \int_0^1\int_0^1 x_1\mathbb{I}(x_1 &lt; x_2)dx_2 dx_1\\
+    &amp;= \int_0^1\int_0^{x_1} x_2 dx_2 dx_1 + \int_0^1\int_0^{x_2} x_1dx_1 dx_2\\
+    &amp;= 2\int_0^1\int_0^{x_1} x_2 dx_2 dx_1\\
+    &amp;= 2 \frac{1}{2\cdot 3}\\
+    &amp;= \frac{1}{3}.\end{split}\]</div>
+<p>In general, if you have <span class="math notranslate nohighlight">\(n\)</span> variables from this distribution you can find the expected value of the min
+as <span class="math notranslate nohighlight">\(n!\int_0^1\cdot\int_0^{x_n}x_n dx_n\cdots dx_1 = \frac{1}{n+1}\)</span> if you’re talking about the uniform.</p>
+<p>Also, as part of experimenting to get this solution, I also did a categorical case, which is very similar except
+you need to worry about the situation where the two variables are equal (which has 0 probability in the continuous
+case): <span class="math notranslate nohighlight">\(\frac{2}{n^2}\sum_{i=1}^n\sum_{j=1}^i x_j - \sum_{i=1}^n x_i\)</span>, where <span class="math notranslate nohighlight">\(n\)</span> is the number of elements
+in the space and they are in ascending order. I believe going from 2 to <span class="math notranslate nohighlight">\(k\)</span>
+draws will be similar, replacing the numerator with <span class="math notranslate nohighlight">\(k!\)</span> and the denominator with <span class="math notranslate nohighlight">\(k\)</span>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>k</strong> (<em>int</em>) – Number of draws from the distribution to compute the min over.</li>
+<li><strong>trials</strong> (<em>int</em>) – Number of random min samples to select before computing the expected value.</li>
+<li><strong>seed</strong> (<em>int</em>) – Random seed for reproducibility.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">the expected value of the min of <code class="docutils literal notranslate"><span class="pre">k</span></code> uniformly distributed variables.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">float</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
 <dt id="chapter.two_exercises.question_2">
 <code class="descclassname">chapter.two_exercises.</code><code class="descname">question_2</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/two_exercises.html#question_2"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.two_exercises.question_2" title="Permalink to this definition">¶</a></dt>
 <dd><p>There is a blood found at a crime scene that has no innocent explanation. The blood is of a type found in

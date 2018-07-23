@@ -310,5 +310,208 @@ def question_9():
     return None
 
 
+def question_10():
+    r""" Derive the inverse gamma distribution.
+
+    If :math:`X \sim Ga(a, b)`, and :math:`Y = 1/X`, show that :math:`Y \sim IG(a, b)`.
+
+    .. math::
+        p_y(y) &= p_x(x)\left|\frac{dy}{dx}\frac{1}{X}\right|\\
+            &= \frac{b^a}{\Gamma(a)}\left(\frac{1}{x}\right)^{a-1}e^{-b/x}x^{-2}\\
+            &= \frac{b^a}{\Gamma(a)}x^{-(a-1)}e^{-b/x}x^{-2}\\
+            &= \frac{b^a}{\Gamma(a)}x^{-(a+1)}e^{-b/x}\\
+            &= IG(a, b).
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_11():
+    r""" Derive the 1D Gaussian normalization constant.
+
+    We're going to need to do a little u-substitution:
+
+    .. math::
+        u &= \frac{r^2}{2\sigma^2}\\
+        du &= \frac{2r}{2\sigma^2}dr\\
+        \frac{\sigma^2}{r}du &= dr.
+
+    .. math::
+        Z^2 &= \int_0^{2\pi}\int_0^{\infty}r exp\left(\frac{-r^2}{2\sigma^2}\right) dr d\theta\\
+            &= \int_0^{2\pi}\int_0^{\infty}r exp\left(\frac{-r^2}{2\sigma^2}\right) dr d\theta\\
+            &= \int_0^{2\pi}\int_0^{\infty}re^{-u} du\frac{\sigma^2}{r}d\theta\\
+            &= \sigma^2\int_0^{2\pi}\int_0^{\infty}e^{-u} du d\theta\\
+            &= \sigma^2\int_0^{2\pi} \left.-e^{-u}\right|_0^{\infty} d\theta\\
+            &= \sigma^2\int_0^{2\pi} 1 d\theta\\
+            &= \sigma^2\left.\theta\right|_0^{2\pi}\\
+            &= \sigma^2 2\pi\\
+        Z &= \sqrt{\sigma^2 2\pi}\\
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_12():
+    r""" Express I(X,Y) as entropy...
+
+    .. math::
+        I(X,Y) &= \Sigma_x\Sigma_y p(x,y) \log\frac{p(x,y)}{p(x)p(y)}\\
+            &= \Sigma_x\Sigma_y p(x|y)p(y) \log\frac{p(x|y)p(y)}{p(x)p(y)}\\
+            &= \Sigma_x\Sigma_y p(x|y)p(y) \left[\log p(x|y) - \log p(x)\right]\\
+            &= \Sigma_x\Sigma_y p(x|y)p(y)\log p(x|y) - \Sigma_x\Sigma_y p(x|y)p(y)\log p(x)\\
+            &= \Sigma_y p(y) \Sigma_x p(x|y)\log p(x|y) - \Sigma_x \log p(x) \Sigma_y p(x|y)p(y)\\
+            &= -H(X|Y) - \Sigma_x \log p(x) \Sigma_y p(x|y)p(y),~&\textrm{Def. of Cond. Entropy}\\
+            &= -H(X|Y) - \Sigma_x p(x)\log p(x),~&\textrm{Law of Total Prob.}\\
+            &= -H(X|Y) + H(X),~&\textrm{Def. of Cond. Entropy}\\
+            &= H(X) - H(X|Y).
+
+    You could simply change the way you go from joint to conditional variables in first step of the proof.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_13():
+    r"""
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_14():
+    r""" Show that normalized mutual information is a type of correlation.
+
+    :math:`r = 1-\frac{H(Y|X)}{H(X)}`.
+
+    a) Show :math:`r = \frac{I(X,Y)}{H(X)}`:
+
+        .. math::
+            r &= 1 - \frac{H(Y|X)}{H(X)}\\
+                &= \frac{H(X)}{H(X)} - \frac{H(Y|X)}{H(X)}\\
+                &= \frac{H(Y) - H(Y|X)}{H(X)},~&\textrm{X and Y are identically distributed.}\\
+                &= \frac{I(X,Y)}{H(X)},~&\textrm{From Q2.12}.
+
+    b) Show :math:`0 \leq r \leq 1`. We need to minimize and maximize the numerator. It is minimized when
+    the :math:`log\frac{p(x,y)}{p(x)p(y)}` is minimized, so:
+
+        .. math::
+            0 &= \log\frac{p(x,y)}{p(x)p(y)}\\
+            \log(p(x)p(y)) &= \log p(x,y)\\
+            \log(p(x)p(y)) &= \log(p(x)p(y)),~&X \perp Y.
+
+        If this term is 0 (and it can be if :math:`X \perp Y`), then the numerator is 0 and :math:`r=0`. The
+        numerator is maximized when :math:`X=Y`.
+
+        .. math::
+            I(X,X) &= \Sigma_x \Sigma_y p(x,x) \log\frac{p(x,x)}{p(x)p(x)}\\
+                &= \Sigma_x \Sigma_y p(x) \log\frac{1}{p(x)}\\
+                &= \Sigma_x p(x) \log\frac{1}{p(x)}\\
+                &= \Sigma_x p(x) \log 1 - \Sigma_x p(x) \log p(x)\\
+                &= 0 + H(X)\\.
+
+        So we end up with :math:`\frac{H(X)}{H(X)} = 1`. So we've seen the min and max and we have shown that
+        :math:`0 \leq r \leq 1`.
+
+    c) :math:`r = 0` when :math:`X \perp Y`.
+
+    d) :math:`r = 1` when :math:`X = Y`.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_16():
+    r""" Mean, median, and mode of the Beta distribution.
+
+    a) Mean:
+
+        .. math::
+            \mathbb{E}[X] &= \int_0^1 x B(a,b)dx\\
+                &= \int_0^1 x\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1}dx\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1 x^a(1-x)^{b-1}dx\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1 x^{(a+1)-1}-x^{a+b-1}dx\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}B(a+1,b),~&\textrm{Integral form of Beta}\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\frac{\Gamma(a+1)\Gamma(b)}{\Gamma(a+b+1)},~&\textrm{Def. of Beta}\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)}\frac{a\Gamma(a)}{(a+b)\Gamma(a+b)},~&\textrm{Def. of }\Gamma,\\
+                &= \frac{a}{(a+b)}.
+
+    b) Mode:
+        We're going to take the derivative, set to 0, and solve to see what we get...
+
+        .. math::
+            B(a, b) &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1}dx\\
+            0 &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[(a-1)x^{a-2}(1-x)^{b-1}-x^{a-1}(b-1)(1-x)^{b-2}\right]\\
+            0 &= (a-1)(1-x)-x(b-1)\\
+            0 &= a-x-1-ax-xb+x\\
+            ax+bx-2x &= a-1\\
+            x &= \frac{a-1}{a+b-2}.
+
+    c) Variance:
+        Just going to use the standard formula and hope for the best!
+
+        .. math::
+            Var(B(a,b)) &= \int_0^1\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left(x-\frac{a}{a+b}\right)^2 x^{a-1}(1-x)^{b-1}dx\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1\left(x^2-\frac{2xa}{a+b}+\frac{a^2}{(a+b)^2}\right) x^{a-1}(1-x)^{b-1}dx\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[\int_0^1 x^{(a+2)-1}(1-x)^{b-1}dx -\frac{2a}{a+b}\int_0^1 x^{(a+1)-1}(1-x)^{b-1}dx+\frac{a^2}{(a+b)^2}\int_0^1 x^{a-1}(1-x)^{b-1}dx\right]\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[B(a+2,b) -\frac{2a}{a+b}B(a+1,b)+\frac{a^2}{(a+b)^2}B(a,b)\right]\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[\frac{\Gamma(a+2)\Gamma(b)}{\Gamma(a+b+2)} -\frac{2a}{a+b}\frac{\Gamma(a+1)\Gamma(b)}{\Gamma(a+b+1)}+\frac{a^2}{(a+b)^2}\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}\right]\\
+                &= \frac{\Gamma(a+b)}{\Gamma(a)}\left[\frac{(a+1)a\Gamma(a)}{(a+b+1)(a+b)\Gamma(a+b)} -\frac{2a}{a+b}\frac{a\Gamma(a)}{(a+b)\Gamma(a+b)}+\frac{a^2}{(a+b)^2}\frac{\Gamma(a)}{\Gamma(a+b)}\right]\\
+                &= \frac{(a+1)a}{(a+b+1)(a+b)} -\frac{2a}{a+b}\frac{a}{(a+b)}+\frac{a^2}{(a+b)^2}\\
+                &= \frac{a^2+a}{(a+b+1)(a+b)} -\frac{2a^2}{(a+b)^2}+\frac{a^2}{(a+b)^2}\\
+                &= \frac{(a^2+a)(a+b) - (2a^2)(a+b+1) + a^2(a+b+1)}{(a+b+1)(a+b)^2}\\
+                &= \frac{a^3+a^2b+a^2+ab - 2a^3-2a^2b-2a^2 + a^3+a^2b+a^2}{(a+b+1)(a+b)^2}\\
+                &= \frac{ab}{(a+b+1)(a+b)^2}.
+
+    Returns:
+        None.
+    """
+    return None
+
+
+def question_17(k=2, trials=1000, seed=1337):
+    r""" Expected value of the minimum of 2 uniformly distributed numbers...
+
+    The trick here is figuring out how to express the max function over two variables...
+    Assuming :math:`x_1,x_2 \sim Unif(0,1)`.
+
+    .. math::
+        \mathbb{E}[min(x_1,x_2)] &= \int_0^1\int_0^1 x_2\mathbb{I}(x_2 \leq x_1) + x_1\mathbb{I}(x_1 < x_2)dx_2 dx_1\\
+            &= \int_0^1\int_0^1 x_2\mathbb{I}(x_2 \leq x_1) dx_2 dx_1 + \int_0^1\int_0^1 x_1\mathbb{I}(x_1 < x_2)dx_2 dx_1\\
+            &= \int_0^1\int_0^{x_1} x_2 dx_2 dx_1 + \int_0^1\int_0^{x_2} x_1dx_1 dx_2\\
+            &= 2\int_0^1\int_0^{x_1} x_2 dx_2 dx_1\\
+            &= 2 \frac{1}{2\cdot 3}\\
+            &= \frac{1}{3}.
+
+    In general, if you have :math:`n` variables from this distribution you can find the expected value of the min
+    as :math:`n!\int_0^1\cdot\int_0^{x_n}x_n dx_n\cdots dx_1 = \frac{1}{n+1}` if you're talking about the uniform.
+
+    Also, as part of experimenting to get this solution, I also did a categorical case, which is very similar except
+    you need to worry about the situation where the two variables are equal (which has 0 probability in the continuous
+    case): :math:`\frac{2}{n^2}\sum_{i=1}^n\sum_{j=1}^i x_j - \sum_{i=1}^n x_i`, where :math:`n` is the number of elements
+    in the space and they are in ascending order. I believe going from 2 to :math:`k`
+    draws will be similar, replacing the numerator with :math:`k!` and the denominator with :math:`k`.
+
+    Args:
+        k (int): Number of draws from the distribution to compute the min over.
+        trials (int): Number of random min samples to select before computing the expected value.
+        seed (int): Random seed for reproducibility.
+
+    Returns:
+        float: the expected value of the min of ``k`` uniformly distributed variables.
+    """
+    random.seed(a=seed)
+    min_samps = [min([random.random() for _ in range(k)]) for _ in range(trials)]
+    return sum(min_samps)/trials
+
 if __name__ == "__main__":
     question_5()

@@ -454,6 +454,209 @@
     <span class="k">return</span> <span class="kc">None</span></div>
 
 
+<div class="viewcode-block" id="question_10"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_10">[docs]</a><span class="k">def</span> <span class="nf">question_10</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Derive the inverse gamma distribution.</span>
+
+<span class="sd">    If :math:`X \sim Ga(a, b)`, and :math:`Y = 1/X`, show that :math:`Y \sim IG(a, b)`.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        p_y(y) &amp;= p_x(x)\left|\frac{dy}{dx}\frac{1}{X}\right|\\</span>
+<span class="sd">            &amp;= \frac{b^a}{\Gamma(a)}\left(\frac{1}{x}\right)^{a-1}e^{-b/x}x^{-2}\\</span>
+<span class="sd">            &amp;= \frac{b^a}{\Gamma(a)}x^{-(a-1)}e^{-b/x}x^{-2}\\</span>
+<span class="sd">            &amp;= \frac{b^a}{\Gamma(a)}x^{-(a+1)}e^{-b/x}\\</span>
+<span class="sd">            &amp;= IG(a, b).</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_11"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_11">[docs]</a><span class="k">def</span> <span class="nf">question_11</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Derive the 1D Gaussian normalization constant.</span>
+
+<span class="sd">    We&#39;re going to need to do a little u-substitution:</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        u &amp;= \frac{r^2}{2\sigma^2}\\</span>
+<span class="sd">        du &amp;= \frac{2r}{2\sigma^2}dr\\</span>
+<span class="sd">        \frac{\sigma^2}{r}du &amp;= dr.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        Z^2 &amp;= \int_0^{2\pi}\int_0^{\infty}r exp\left(\frac{-r^2}{2\sigma^2}\right) dr d\theta\\</span>
+<span class="sd">            &amp;= \int_0^{2\pi}\int_0^{\infty}r exp\left(\frac{-r^2}{2\sigma^2}\right) dr d\theta\\</span>
+<span class="sd">            &amp;= \int_0^{2\pi}\int_0^{\infty}re^{-u} du\frac{\sigma^2}{r}d\theta\\</span>
+<span class="sd">            &amp;= \sigma^2\int_0^{2\pi}\int_0^{\infty}e^{-u} du d\theta\\</span>
+<span class="sd">            &amp;= \sigma^2\int_0^{2\pi} \left.-e^{-u}\right|_0^{\infty} d\theta\\</span>
+<span class="sd">            &amp;= \sigma^2\int_0^{2\pi} 1 d\theta\\</span>
+<span class="sd">            &amp;= \sigma^2\left.\theta\right|_0^{2\pi}\\</span>
+<span class="sd">            &amp;= \sigma^2 2\pi\\</span>
+<span class="sd">        Z &amp;= \sqrt{\sigma^2 2\pi}\\</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_12"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_12">[docs]</a><span class="k">def</span> <span class="nf">question_12</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Express I(X,Y) as entropy...</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        I(X,Y) &amp;= \Sigma_x\Sigma_y p(x,y) \log\frac{p(x,y)}{p(x)p(y)}\\</span>
+<span class="sd">            &amp;= \Sigma_x\Sigma_y p(x|y)p(y) \log\frac{p(x|y)p(y)}{p(x)p(y)}\\</span>
+<span class="sd">            &amp;= \Sigma_x\Sigma_y p(x|y)p(y) \left[\log p(x|y) - \log p(x)\right]\\</span>
+<span class="sd">            &amp;= \Sigma_x\Sigma_y p(x|y)p(y)\log p(x|y) - \Sigma_x\Sigma_y p(x|y)p(y)\log p(x)\\</span>
+<span class="sd">            &amp;= \Sigma_y p(y) \Sigma_x p(x|y)\log p(x|y) - \Sigma_x \log p(x) \Sigma_y p(x|y)p(y)\\</span>
+<span class="sd">            &amp;= -H(X|Y) - \Sigma_x \log p(x) \Sigma_y p(x|y)p(y),~&amp;\textrm{Def. of Cond. Entropy}\\</span>
+<span class="sd">            &amp;= -H(X|Y) - \Sigma_x p(x)\log p(x),~&amp;\textrm{Law of Total Prob.}\\</span>
+<span class="sd">            &amp;= -H(X|Y) + H(X),~&amp;\textrm{Def. of Cond. Entropy}\\</span>
+<span class="sd">            &amp;= H(X) - H(X|Y).</span>
+
+<span class="sd">    You could simply change the way you go from joint to conditional variables in first step of the proof.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_13"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_13">[docs]</a><span class="k">def</span> <span class="nf">question_13</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_14"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_14">[docs]</a><span class="k">def</span> <span class="nf">question_14</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Show that normalized mutual information is a type of correlation.</span>
+
+<span class="sd">    :math:`r = 1-\frac{H(Y|X)}{H(X)}`.</span>
+
+<span class="sd">    a) Show :math:`r = \frac{I(X,Y)}{H(X)}`:</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            r &amp;= 1 - \frac{H(Y|X)}{H(X)}\\</span>
+<span class="sd">                &amp;= \frac{H(X)}{H(X)} - \frac{H(Y|X)}{H(X)}\\</span>
+<span class="sd">                &amp;= \frac{H(Y) - H(Y|X)}{H(X)},~&amp;\textrm{X and Y are identically distributed.}\\</span>
+<span class="sd">                &amp;= \frac{I(X,Y)}{H(X)},~&amp;\textrm{From Q2.12}.</span>
+
+<span class="sd">    b) Show :math:`0 \leq r \leq 1`. We need to minimize and maximize the numerator. It is minimized when</span>
+<span class="sd">    the :math:`log\frac{p(x,y)}{p(x)p(y)}` is minimized, so:</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            0 &amp;= \log\frac{p(x,y)}{p(x)p(y)}\\</span>
+<span class="sd">            \log(p(x)p(y)) &amp;= \log p(x,y)\\</span>
+<span class="sd">            \log(p(x)p(y)) &amp;= \log(p(x)p(y)),~&amp;X \perp Y.</span>
+
+<span class="sd">        If this term is 0 (and it can be if :math:`X \perp Y`), then the numerator is 0 and :math:`r=0`. The</span>
+<span class="sd">        numerator is maximized when :math:`X=Y`.</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            I(X,X) &amp;= \Sigma_x \Sigma_y p(x,x) \log\frac{p(x,x)}{p(x)p(x)}\\</span>
+<span class="sd">                &amp;= \Sigma_x \Sigma_y p(x) \log\frac{1}{p(x)}\\</span>
+<span class="sd">                &amp;= \Sigma_x p(x) \log\frac{1}{p(x)}\\</span>
+<span class="sd">                &amp;= \Sigma_x p(x) \log 1 - \Sigma_x p(x) \log p(x)\\</span>
+<span class="sd">                &amp;= 0 + H(X)\\.</span>
+
+<span class="sd">        So we end up with :math:`\frac{H(X)}{H(X)} = 1`. So we&#39;ve seen the min and max and we have shown that</span>
+<span class="sd">        :math:`0 \leq r \leq 1`.</span>
+
+<span class="sd">    c) :math:`r = 0` when :math:`X \perp Y`.</span>
+
+<span class="sd">    d) :math:`r = 1` when :math:`X = Y`.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_16"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_16">[docs]</a><span class="k">def</span> <span class="nf">question_16</span><span class="p">():</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Mean, median, and mode of the Beta distribution.</span>
+
+<span class="sd">    a) Mean:</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            \mathbb{E}[X] &amp;= \int_0^1 x B(a,b)dx\\</span>
+<span class="sd">                &amp;= \int_0^1 x\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1}dx\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1 x^a(1-x)^{b-1}dx\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1 x^{(a+1)-1}-x^{a+b-1}dx\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}B(a+1,b),~&amp;\textrm{Integral form of Beta}\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\frac{\Gamma(a+1)\Gamma(b)}{\Gamma(a+b+1)},~&amp;\textrm{Def. of Beta}\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)}\frac{a\Gamma(a)}{(a+b)\Gamma(a+b)},~&amp;\textrm{Def. of }\Gamma,\\</span>
+<span class="sd">                &amp;= \frac{a}{(a+b)}.</span>
+
+<span class="sd">    b) Mode:</span>
+<span class="sd">        We&#39;re going to take the derivative, set to 0, and solve to see what we get...</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            B(a, b) &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}x^{a-1}(1-x)^{b-1}dx\\</span>
+<span class="sd">            0 &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[(a-1)x^{a-2}(1-x)^{b-1}-x^{a-1}(b-1)(1-x)^{b-2}\right]\\</span>
+<span class="sd">            0 &amp;= (a-1)(1-x)-x(b-1)\\</span>
+<span class="sd">            0 &amp;= a-x-1-ax-xb+x\\</span>
+<span class="sd">            ax+bx-2x &amp;= a-1\\</span>
+<span class="sd">            x &amp;= \frac{a-1}{a+b-2}.</span>
+
+<span class="sd">    c) Variance:</span>
+<span class="sd">        Just going to use the standard formula and hope for the best!</span>
+
+<span class="sd">        .. math::</span>
+<span class="sd">            Var(B(a,b)) &amp;= \int_0^1\frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left(x-\frac{a}{a+b}\right)^2 x^{a-1}(1-x)^{b-1}dx\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\int_0^1\left(x^2-\frac{2xa}{a+b}+\frac{a^2}{(a+b)^2}\right) x^{a-1}(1-x)^{b-1}dx\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[\int_0^1 x^{(a+2)-1}(1-x)^{b-1}dx -\frac{2a}{a+b}\int_0^1 x^{(a+1)-1}(1-x)^{b-1}dx+\frac{a^2}{(a+b)^2}\int_0^1 x^{a-1}(1-x)^{b-1}dx\right]\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[B(a+2,b) -\frac{2a}{a+b}B(a+1,b)+\frac{a^2}{(a+b)^2}B(a,b)\right]\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)\Gamma(b)}\left[\frac{\Gamma(a+2)\Gamma(b)}{\Gamma(a+b+2)} -\frac{2a}{a+b}\frac{\Gamma(a+1)\Gamma(b)}{\Gamma(a+b+1)}+\frac{a^2}{(a+b)^2}\frac{\Gamma(a)\Gamma(b)}{\Gamma(a+b)}\right]\\</span>
+<span class="sd">                &amp;= \frac{\Gamma(a+b)}{\Gamma(a)}\left[\frac{(a+1)a\Gamma(a)}{(a+b+1)(a+b)\Gamma(a+b)} -\frac{2a}{a+b}\frac{a\Gamma(a)}{(a+b)\Gamma(a+b)}+\frac{a^2}{(a+b)^2}\frac{\Gamma(a)}{\Gamma(a+b)}\right]\\</span>
+<span class="sd">                &amp;= \frac{(a+1)a}{(a+b+1)(a+b)} -\frac{2a}{a+b}\frac{a}{(a+b)}+\frac{a^2}{(a+b)^2}\\</span>
+<span class="sd">                &amp;= \frac{a^2+a}{(a+b+1)(a+b)} -\frac{2a^2}{(a+b)^2}+\frac{a^2}{(a+b)^2}\\</span>
+<span class="sd">                &amp;= \frac{(a^2+a)(a+b) - (2a^2)(a+b+1) + a^2(a+b+1)}{(a+b+1)(a+b)^2}\\</span>
+<span class="sd">                &amp;= \frac{a^3+a^2b+a^2+ab - 2a^3-2a^2b-2a^2 + a^3+a^2b+a^2}{(a+b+1)(a+b)^2}\\</span>
+<span class="sd">                &amp;= \frac{ab}{(a+b+1)(a+b)^2}.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        None.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="kc">None</span></div>
+
+
+<div class="viewcode-block" id="question_17"><a class="viewcode-back" href="../../chapter.html#chapter.two_exercises.question_17">[docs]</a><span class="k">def</span> <span class="nf">question_17</span><span class="p">(</span><span class="n">k</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">trials</span><span class="o">=</span><span class="mi">1000</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1337</span><span class="p">):</span>
+    <span class="sa">r</span><span class="sd">&quot;&quot;&quot; Expected value of the minimum of 2 uniformly distributed numbers...</span>
+
+<span class="sd">    The trick here is figuring out how to express the max function over two variables...</span>
+<span class="sd">    Assuming :math:`x_1,x_2 \sim Unif(0,1)`.</span>
+
+<span class="sd">    .. math::</span>
+<span class="sd">        \mathbb{E}[min(x_1,x_2)] &amp;= \int_0^1\int_0^1 x_2\mathbb{I}(x_2 \leq x_1) + x_1\mathbb{I}(x_1 &lt; x_2)dx_2 dx_1\\</span>
+<span class="sd">            &amp;= \int_0^1\int_0^1 x_2\mathbb{I}(x_2 \leq x_1) dx_2 dx_1 + \int_0^1\int_0^1 x_1\mathbb{I}(x_1 &lt; x_2)dx_2 dx_1\\</span>
+<span class="sd">            &amp;= \int_0^1\int_0^{x_1} x_2 dx_2 dx_1 + \int_0^1\int_0^{x_2} x_1dx_1 dx_2\\</span>
+<span class="sd">            &amp;= 2\int_0^1\int_0^{x_1} x_2 dx_2 dx_1\\</span>
+<span class="sd">            &amp;= 2 \frac{1}{2\cdot 3}\\</span>
+<span class="sd">            &amp;= \frac{1}{3}.</span>
+
+<span class="sd">    In general, if you have :math:`n` variables from this distribution you can find the expected value of the min</span>
+<span class="sd">    as :math:`n!\int_0^1\cdot\int_0^{x_n}x_n dx_n\cdots dx_1 = \frac{1}{n+1}` if you&#39;re talking about the uniform.</span>
+
+<span class="sd">    Also, as part of experimenting to get this solution, I also did a categorical case, which is very similar except</span>
+<span class="sd">    you need to worry about the situation where the two variables are equal (which has 0 probability in the continuous</span>
+<span class="sd">    case): :math:`\frac{2}{n^2}\sum_{i=1}^n\sum_{j=1}^i x_j - \sum_{i=1}^n x_i`, where :math:`n` is the number of elements</span>
+<span class="sd">    in the space and they are in ascending order. I believe going from 2 to :math:`k`</span>
+<span class="sd">    draws will be similar, replacing the numerator with :math:`k!` and the denominator with :math:`k`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        k (int): Number of draws from the distribution to compute the min over.</span>
+<span class="sd">        trials (int): Number of random min samples to select before computing the expected value.</span>
+<span class="sd">        seed (int): Random seed for reproducibility.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        float: the expected value of the min of ``k`` uniformly distributed variables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">a</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">min_samps</span> <span class="o">=</span> <span class="p">[</span><span class="nb">min</span><span class="p">([</span><span class="n">random</span><span class="o">.</span><span class="n">random</span><span class="p">()</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">k</span><span class="p">)])</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">trials</span><span class="p">)]</span>
+    <span class="k">return</span> <span class="nb">sum</span><span class="p">(</span><span class="n">min_samps</span><span class="p">)</span><span class="o">/</span><span class="n">trials</span></div>
+
 <span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
     <span class="n">question_5</span><span class="p">()</span>
 </pre></div>
