@@ -3,4 +3,6 @@ ml/
 .idea*
 *__pycache__*
 *.swp
+*.pytest_cache
+build
 
