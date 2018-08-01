@@ -10,7 +10,7 @@ def height_weight_data():
         "cached_data/height_weight.csv",
         header=None,
         names=["gender", "height", "weight"],
-        sep=","
+        sep=",",
     )
 
 
@@ -32,3 +32,12 @@ def test_qda_fit(qda, height_weight_data):
     assert len(qda.sigma) == 2, "Number of covariances equals the number of classes"
     assert qda.sigma[0].shape == (2, 2), "Covariances are the correct shape"
 
+
+def test_qda_predict(qda, height_weight_data):
+    qda.fit(
+        height_weight_data.drop(columns=["gender"]).values,
+        height_weight_data.gender.values
+    )
+    retval = qda.predict(height_weight_data.drop(columns=["gender"]))
+    assert len(retval) == len(height_weight_data), "All elements are predicted"
+    assert set(retval).issubset(set(height_weight_data.gender.values)), "All elements are viable class labels"
