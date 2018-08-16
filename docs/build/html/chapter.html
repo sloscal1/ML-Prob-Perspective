@@ -82,7 +82,12 @@
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">chapter</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">chapter package</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#submodules">Submodules</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-chapter.five_exercises">chapter.five_exercises module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-chapter.four">chapter.four module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-chapter.four_exercises">chapter.four_exercises module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-chapter.one_exercises">chapter.one_exercises module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-chapter.six">chapter.six module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-chapter.six_exercises">chapter.six_exercises module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-chapter.three_exercises">chapter.three_exercises module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-chapter.two_exercises">chapter.two_exercises module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#module-chapter">Module contents</a></li>
@@ -160,6 +165,240 @@
 <h1>chapter package<a class="headerlink" href="#chapter-package" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-chapter.five_exercises">
+<span id="chapter-five-exercises-module"></span><h2>chapter.five_exercises module<a class="headerlink" href="#module-chapter.five_exercises" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="chapter.five_exercises.question_1">
+<code class="descclassname">chapter.five_exercises.</code><code class="descname">question_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/five_exercises.html#question_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.five_exercises.question_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Posterior of a mixture of conjugate priors is a mixture of conjugates.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(\theta|D) &amp;= \frac{p(\theta, D)}{p(D)},~&amp;\textrm{Def. Cond. Prob},\\
+    &amp;= \frac{\sum_k p(z=k)p(\theta, D | z=k)}{\sum_{k'} p(z=k')p(D|z=k')},~&amp;\textrm{Law of Total Prob},\\
+    &amp;= \frac{\sum_k p(z=k)p(D|z=k)p(\theta|D,z=k)}{\sum_{k'} p(z=k')p(D|z=k')},~&amp;\textrm{Chain Rule of Prob.},\\
+    &amp;= \sum_k p(z=k|D)p(\theta|D,z=k),~&amp;\textrm{Bayes Thm.}\end{split}\]</div>
+<p>So we have the posterior of a mixture equal to the weighted sum of the posterior of each individual posterior, with
+the weights being the posteriors of the mixture distribution.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.five_exercises.question_3">
+<code class="descclassname">chapter.five_exercises.</code><code class="descname">question_3</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/five_exercises.html#question_3"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.five_exercises.question_3" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reject options.</p>
+<p>Basically, you have C possible classes that you can select as your prediction (as defined by a particular problem)
+plus another option: you can reject making a prediction. The cost of a misprediction is <span class="math notranslate nohighlight">\(\lambda_s\)</span>, while
+the cost for rejecting is <span class="math notranslate nohighlight">\(\lambda_r\)</span>.</p>
+<ol class="loweralpha">
+<li><dl class="first docutils">
+<dt>Figure out the minimum risk attained given the above parameters.</dt>
+<dd><p class="first">We were given <span class="math notranslate nohighlight">\(p(y=j|x) = \theta\)</span>, but the trick is to figure out where the threshold <span class="math notranslate nohighlight">\(T\)</span> is between
+getting a rejection and misprediction error. That probability is <span class="math notranslate nohighlight">\(p(\hat{y}=j|x) &gt; T\)</span>, so we can state
+the loss function in terms of <span class="math notranslate nohighlight">\(T\)</span> and go from there. Make sure you pay attention to <span class="math notranslate nohighlight">\(\hat{y}\)</span> versus
+<span class="math notranslate nohighlight">\(y\)</span>! Once the expected value expression is available, we take the derivative and set it equal to 0 to
+find where it is maximized.</p>
+<div class="last math notranslate nohighlight">
+\[\begin{split}\mathbb{E}[\ell p(\hat{y}=j|x)] &amp;= \int_0^T \lambda_r t dt+ \int_T^1 \lambda_s (1-\theta) t dt,~\textrm{Def. of Expected Value}\\
+    &amp;= \frac{\lambda_rT^2}{2} + \lambda_s(1-\theta)\left[\frac{1}{2} - \frac{T^2}{2}\right]\\
+0 &amp;= \frac{\lambda_rT^2}{2} + \lambda_s(1-\theta)\left[\frac{1}{2} - \frac{T^2}{2}\right]\frac{d}{dT}\\
+    &amp;= \lambda_rT - \lambda_s(1-\theta)T\\
+    \frac{\lambda_rT}{\lambda_sT} &amp;= 1-\theta\\
+    1-\frac{\lambda_r}{\lambda_s} &amp;= \theta.\end{split}\]</div>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Qualitatively, we see a linear function in terms of the cost matrix and the max class <span class="math notranslate nohighlight">\(j\)</span>.</dt>
+<dd><p class="first last">As loss due to rejection grows from 0 to the cost of a misprediction error, we see at first that
+the system must be 100% confident in its prediction to go forward with it, otherwise it’s free to reject. when
+the two equal each other then there is no benefit to rejecting anything anymore and the majority prediction will
+be selected at all times instead of the reject option.</p>
+</dd>
+</dl>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.five_exercises.question_4">
+<code class="descclassname">chapter.five_exercises.</code><code class="descname">question_4</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/five_exercises.html#question_4"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.five_exercises.question_4" title="Permalink to this definition">¶</a></dt>
+<dd><p>More reject options.</p>
+<p>Based on question 3 we know that the risk threshold when a reject option is in play is <span class="math notranslate nohighlight">\(1-\frac{\lambda_r}{\lambda_s}\)</span>,
+and given the table in this problem, we see that it is a safer decision to reject a prediction if it is less than
+<span class="math notranslate nohighlight">\(1-\frac{3}{10} = 0.7\)</span>. Using this fact we can solve the next couple of questions:</p>
+<ol class="loweralpha simple">
+<li><dl class="first docutils">
+<dt>Suppose <span class="math notranslate nohighlight">\(p(y=1|x) = 0.2\)</span>. Which decision minimizes the expected loss? <span class="math notranslate nohighlight">\(\hat{y} = 0\)</span></dt>
+<dd>Its probability is 0.8.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>Suppose <span class="math notranslate nohighlight">\(p(y=1|x) = 0.4\)</span>. Which decision minimizes the expected loss? Reject.</dt>
+<dd>The maximum confidence is 0.6 &lt; 0.7.</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>The thresholds can be specified a little more crisply than the previous question where there were C classes.</dt>
+<dd>In the binary case, predict 0 if <span class="math notranslate nohighlight">\(p_1 &lt; \frac{\lambda_r}{\lambda_s} = \theta_0\)</span>, predict 1 if
+<span class="math notranslate nohighlight">\(p_1 &gt; 1-\frac{\lambda_r}{\lambda_s} = \theta_1\)</span>, and reject if <span class="math notranslate nohighlight">\(\theta_0 \leq p_1 \leq \theta_1\)</span>.
+The idea is that any posterior distribution is a distribution and therefore sums to one. If <span class="math notranslate nohighlight">\(p_1\)</span> is
+small, then <span class="math notranslate nohighlight">\(p_0\)</span> is large and we should select that, and vice versa. Maximum uncertainty occurs when
+<span class="math notranslate nohighlight">\(p_1=p_0=0.5\)</span> in which case we should reject as long as the cost for doing so is less than the cost of
+a misprediction. The reject region grows wider (symmetrically around 0.5 if the loss is equal for a misprediction
+in either class) as the cost of a rejection grows smaller proportional to the cost of a misprediction.</dd>
+</dl>
+</li>
+</ol>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-chapter.four">
+<span id="chapter-four-module"></span><h2>chapter.four module<a class="headerlink" href="#module-chapter.four" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="chapter.four.LinearDiscriminantAnalysis">
+<em class="property">class </em><code class="descclassname">chapter.four.</code><code class="descname">LinearDiscriminantAnalysis</code><a class="reference internal" href="_modules/chapter/four.html#LinearDiscriminantAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four.LinearDiscriminantAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="chapter.four.LinearDiscriminantAnalysis.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em>, <em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four.html#LinearDiscriminantAnalysis.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four.LinearDiscriminantAnalysis.fit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="chapter.four.LinearDiscriminantAnalysis.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four.html#LinearDiscriminantAnalysis.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four.LinearDiscriminantAnalysis.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="chapter.four.QuadraticDiscriminantAnalysis">
+<em class="property">class </em><code class="descclassname">chapter.four.</code><code class="descname">QuadraticDiscriminantAnalysis</code><a class="reference internal" href="_modules/chapter/four.html#QuadraticDiscriminantAnalysis"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four.QuadraticDiscriminantAnalysis" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="chapter.four.QuadraticDiscriminantAnalysis.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em>, <em>label</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four.html#QuadraticDiscriminantAnalysis.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four.QuadraticDiscriminantAnalysis.fit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="chapter.four.QuadraticDiscriminantAnalysis.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four.html#QuadraticDiscriminantAnalysis.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four.QuadraticDiscriminantAnalysis.predict" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.four.decision_boundary">
+<code class="descclassname">chapter.four.</code><code class="descname">decision_boundary</code><span class="sig-paren">(</span><em>model</em>, <em>data</em>, <em>target</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four.html#decision_boundary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four.decision_boundary" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-chapter.four_exercises">
+<span id="chapter-four-exercises-module"></span><h2>chapter.four_exercises module<a class="headerlink" href="#module-chapter.four_exercises" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="chapter.four_exercises.question_17">
+<code class="descclassname">chapter.four_exercises.</code><code class="descname">question_17</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four_exercises.html#question_17"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four_exercises.question_17" title="Permalink to this definition">¶</a></dt>
+<dd><p>Misclassification error rate of QDA and LDA.</p>
+<p>Looks like they’re both the same for the Height and Weight data: 11.9%.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.four_exercises.question_19">
+<code class="descclassname">chapter.four_exercises.</code><code class="descname">question_19</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four_exercises.html#question_19"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four_exercises.question_19" title="Permalink to this definition">¶</a></dt>
+<dd><p>Stretched LDA.</p>
+<p>This is LDA with the additional parameter that we can multiply the grouped covariance matrix
+by a class-specific value to stretch the Gaussians.</p>
+<p>This change will cause the resulting model to still be quadratic in <span class="math notranslate nohighlight">\(x\)</span> because we can’t
+eliminate all of the squared terms as we did with LDA.</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}p(y=c|x,\theta) &amp;= \frac{\pi_c|2\pi\Sigma|^{-\frac{1}{2}}\exp(-\frac{1}{2}(x-\mu_c)^T\Sigma^{-1}(x-\mu_c))}{\Sigma_{c'}\pi_{c'}|2\pi\Sigma|^{-\frac{1}{2}}\exp(-\frac{1}{2}(x-\mu_{c'})^T\Sigma^{-1}(x-\mu_{c'}))}\\
+    &amp;= \frac{\pi_ck_c^n\exp(-\frac{1}{2}(x-\mu_c)^T\Sigma^{-1}(x-\mu_c))}{\Sigma_{c'}\pi_{c'}k_{c'}^n\exp(-\frac{1}{2}(x-\mu_{c'})^T\Sigma^{-1}(x-\mu_{c'}))}\\
+    &amp;= \frac{\pi_ck_c^n\exp(-\frac{1}{2}k_cx^T\Sigma^{-1}x)\exp(-\frac{1}{2}k_c\mu_c^T\Sigma^{-1}\mu_c+k_c\mu_c^T\Sigma^{-1}x}{\Sigma_{c'}\pi_{c'}k_{c'}^n\exp(-\frac{1}{2}k_{c'}x^T\Sigma^{-1}x)\exp(-\frac{1}{2}k_{c'}\mu_{c'}^T\Sigma^{-1}\mu_{c'}+k_{c'}\mu_{c'}^T\Sigma^{-1}x}\\\end{split}\]</div>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.four_exercises.question_22">
+<code class="descclassname">chapter.four_exercises.</code><code class="descname">question_22</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four_exercises.html#question_22"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four_exercises.question_22" title="Permalink to this definition">¶</a></dt>
+<dd><p>QDA with 3 classes.</p>
+<p>Side effect: prints the answer that we’re looking for!</p>
+<p>Point [-0.5, 0.5] is classified as 1, while [0.5, 0.5] is classified as 2.</p>
+<p>Interestingly, they’re both very close to the decision boundary, with the first point
+almost in the 3rd class, and the second point almost in the 1st class. The results may
+be an artifact due to numerical instability in the code, but visual inspection marks them
+as the class labels given above.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.four_exercises.question_23">
+<code class="descclassname">chapter.four_exercises.</code><code class="descname">question_23</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/four_exercises.html#question_23"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.four_exercises.question_23" title="Permalink to this definition">¶</a></dt>
+<dd><p>Scalar QDA.</p>
+<dl class="docutils">
+<dt>Side-effect:</dt>
+<dd><p class="first">We found the QDA values for each class as desired, and got an 83% probability for a 72 inch
+student to be a male at this university.</p>
+<p class="last">The meatier question is about how to extend this method to the situation if we had multiple
+attributes per person. The clear answer would be to simply run QDA as implemented earlier, but I think
+that’s not what the question is really getting at. I think you could run an ensemble of 1D QDA’s and
+then take the average of the predicted values for each class across the set of 1D classifiers. This would
+ignore correlations between variables, but would take into account the multiple features.</p>
+</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
 </div>
 <div class="section" id="module-chapter.one_exercises">
 <span id="chapter-one-exercises-module"></span><h2>chapter.one_exercises module<a class="headerlink" href="#module-chapter.one_exercises" title="Permalink to this headline">¶</a></h2>
@@ -239,6 +478,151 @@ version; however, the time increases substantially for the Linear version.</p>
 <dt id="chapter.one_exercises.read_mnist_labels">
 <code class="descclassname">chapter.one_exercises.</code><code class="descname">read_mnist_labels</code><span class="sig-paren">(</span><em>local</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/one_exercises.html#read_mnist_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.one_exercises.read_mnist_labels" title="Permalink to this definition">¶</a></dt>
 <dd></dd></dl>
+
+</div>
+<div class="section" id="module-chapter.six">
+<span id="chapter-six-module"></span><h2>chapter.six module<a class="headerlink" href="#module-chapter.six" title="Permalink to this headline">¶</a></h2>
+<p>This module covers some tests from chapter 6: Frequentist Methods.</p>
+<dl class="class">
+<dt id="chapter.six.MajorityClassifier">
+<em class="property">class </em><code class="descclassname">chapter.six.</code><code class="descname">MajorityClassifier</code><a class="reference internal" href="_modules/chapter/six.html#MajorityClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six.MajorityClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Selects the majority label from the training data.</p>
+<p>This classifier only works on random data, with a binary label it’s not meant
+to be used for actually problems.</p>
+<dl class="attribute">
+<dt id="chapter.six.MajorityClassifier.prob">
+<code class="descname">prob</code><a class="headerlink" href="#chapter.six.MajorityClassifier.prob" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – the probability of the majority class.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="chapter.six.MajorityClassifier.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/six.html#MajorityClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six.MajorityClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find out the majority class label from the test labels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>numpy.array</em>) – an array of labels <span class="math notranslate nohighlight">\(y \in {0, 1}\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="chapter.six.MajorityClassifier.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/six.html#MajorityClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six.MajorityClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the majority class irrespective of input.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">1 or 0.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="chapter.six.ProbabilisticClassifier">
+<em class="property">class </em><code class="descclassname">chapter.six.</code><code class="descname">ProbabilisticClassifier</code><span class="sig-paren">(</span><em>seed=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/six.html#ProbabilisticClassifier"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six.ProbabilisticClassifier" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Selects a class label by the proportion of labels in the training data.</p>
+<dl class="attribute">
+<dt id="chapter.six.ProbabilisticClassifier.prob">
+<code class="descname">prob</code><a class="headerlink" href="#chapter.six.ProbabilisticClassifier.prob" title="Permalink to this definition">¶</a></dt>
+<dd><p><em>float</em> – the probability of getting 1 the data.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="chapter.six.ProbabilisticClassifier.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>data</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/six.html#ProbabilisticClassifier.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six.ProbabilisticClassifier.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Find out the probability of 1’s from the test labels.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>data</strong> (<em>numpy.array</em>) – an array of labels <span class="math notranslate nohighlight">\(y \in {0, 1}\)</span>.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="chapter.six.ProbabilisticClassifier.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/six.html#ProbabilisticClassifier.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six.ProbabilisticClassifier.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a stochastic result that is proportional to the number of 1’s in the training data.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">1 or 0.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">int</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="chapter.six.demo_loocv">
+<code class="descclassname">chapter.six.</code><code class="descname">demo_loocv</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/six.html#demo_loocv"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six.demo_loocv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pessimism of LOOCV.</p>
+<p>I was thinking about this a little, and I was wondering about this question
+beyond what was stated in 6.1.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-chapter.six_exercises">
+<span id="chapter-six-exercises-module"></span><h2>chapter.six_exercises module<a class="headerlink" href="#module-chapter.six_exercises" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="chapter.six_exercises.question_1">
+<code class="descclassname">chapter.six_exercises.</code><code class="descname">question_1</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/chapter/six_exercises.html#question_1"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#chapter.six_exercises.question_1" title="Permalink to this definition">¶</a></dt>
+<dd><p>Pessimism of LOOCV. I didn’t like the question because I thought it was a little too open…</p>
+<p>You want to show that LOOCV can be a really bad estimate of error in some situations. For example, if you
+have a random class label that you’re trying to predict (binary, equal proportions), LOOCV can report
+a really bad error bound. You’re asked what the best classifier is for this data and what happens when you
+do its LOOCV estimate.</p>
+<p>The question is leading (though not prescribing) you towards a simple majority classifier. It will be right the
+maximum number of times (0.5), and it’s LOOCV error rate will be extremely pessimistic, at 100%. The reason is
+simple enough - if you remove a single sample, then the other class becomese the majority so you’ll predict that
+but it’s only the majority because the test sample belonged to the other class and so you’ll be wrong every time.</p>
+<p>But this isn’t the only optimal classifier specification for this problem. You can also have a probabilistic
+classifier that outputs a label in proportion to the input. In this case you’ll again achieve an accuracy of 0.5,
+but the LOOCV will essentially also be 0.5 as the training data grows. For small amounts of training data the
+process will give you something closer to a 0.49 error rate, but it’s still not that bad.</p>
+<p>In short, the LOOCV is pessimistic, but to get the wild swing desired by the question it should have been explicit
+and asked the reader to investigate the majority classifier (as is done in the source discussion referred to in the
+question (Witten, Frank, Hall p.154 in Data mining 3rd edition).</p>
+<p>See <code class="docutils literal notranslate"><span class="pre">chapter.six.demo_loocv</span></code> for simulation study of this question.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">None.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-chapter.three_exercises">

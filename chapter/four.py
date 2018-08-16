@@ -2,6 +2,7 @@ import math
 
 import numpy as np
 import pandas as pd
+import holoviews as hv
 
 
 class QuadraticDiscriminantAnalysis:
@@ -10,6 +11,7 @@ class QuadraticDiscriminantAnalysis:
         self.mu = None
         self.sigma = None
         self.pos_labels = None
+        self.probs = None
 
     def fit(self, data, label):
         self.pos_labels, counts = np.unique(label, return_counts=True)
@@ -50,6 +52,68 @@ class QuadraticDiscriminantAnalysis:
         b = num.max(axis=0)
         denom = b + np.log(np.sum(np.exp(num - b), axis=0))
         # Prob: np.exp(num - denom)
-        return [self.pos_labels[i] for i in (num - denom).argmax(axis=0)]
+        self.probs = (num - denom)
+        return [self.pos_labels[i] for i in self.probs.argmax(axis=0)]
+
+
+class LinearDiscriminantAnalysis:
+    def __init__(self):
+        self.pi = None
+        self.mu = None
+        self.sigma = None
+        self.pos_labels = None
+        self.probs = None
+
+    def fit(self, data, label):
+        self.pos_labels, counts = np.unique(label, return_counts=True)
+        # Each of the pi's are the MLE of the class probabilities
+        self.pi = counts/len(label)
+        # Each of the mu's are the MLE of the class means
+        self.mu = [np.mean(data[np.nonzero(label == cl)], axis=0) for cl in self.pos_labels]
+        # Each of the sigma's are the MLE of the class STD
+        self.sigma = []
+        for cl, n_c, mu in list(zip(self.pos_labels, counts, self.mu)):
+            dist = (data[np.nonzero(label == cl)] - mu).transpose()
+            self.sigma.append(dist @ dist.transpose()/n_c)
+        self.sigma = np.dot(np.dstack(self.sigma), self.pi)
+
+    def predict(self, data):
+        if self.pi is None:
+            raise ValueError("Fit the model first!")
+        if isinstance(data, pd.DataFrame):
+            data = data.values
+        # Get the log probabilities of each class for each sample according to the MLE
+        num = []
+        gamma = np.linalg.inv(self.sigma)
+        for pi, mu in list(zip(self.pi, self.mu)):
+            # These terms could be factored out of all future predictions
+            # as well as sigma^-1
+            num.append(np.log(pi) - 0.5*(mu.T @ gamma @ mu) + (data @ gamma @ mu))
+        num = np.vstack(num)
+        self.probs = num
+        return [self.pos_labels[i] for i in num.argmax(axis=0)]
+
+
+def decision_boundary(model, data, target):
+    hv.extension("bokeh")
+    # Get the classes
+    classes = np.unique(target)
+    # Get a grid
+    bounds = [data.min(axis=0), data.max(axis=0)]
+    points = []
+    for dim in range(data.shape[1]):
+        points.append(np.linspace(bounds[0][dim], bounds[1][dim], 25))
+    xx, yy = np.meshgrid(np.linspace(bounds[0][0], bounds[1][1], 25),
+                       np.linspace(bounds[0][1], bounds[1][1], 25),
+                       indexing="xy")
+    grid = np.vstack([xx.ravel(), yy.ravel()]).T
+    # Predict those points
+    model.fit(data, target)
+    preds = np.array(model.predict(grid))
+    grid = np.hstack([grid, preds[:, None]])
+    # Draw them!
+    img = hv.Image(grid, bounds=list(bounds[0])+list(bounds[1]))
+    img
+    # Draw the actual points
 
 
